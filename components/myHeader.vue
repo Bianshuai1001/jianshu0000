@@ -272,6 +272,8 @@
     }
     nav .nav-list{
         zoom:1;
+        margin: 0 -15px;
+        padding: 0;
     }
     nav .nav-list:after{
         content: "";
@@ -285,7 +287,7 @@
         height: 55px;
         display: block;
         padding:15px;
-        padding-right: 10px;
+        /*padding-left: 0px;*/
         font-size: 17px;
     }
     nav .nav-list>li>a>i{
@@ -313,7 +315,8 @@
         min-width: 170px;
         box-shadow: 0 0 8px rgba(0,0,0,.1);
         font-size: 15px;
-        /*z-index: 9999!important;*/
+        background-color: white;
+        z-index: 9999;
     }
     nav .nav-list .info-menu ul{
         padding: 10px 0;
@@ -372,6 +375,9 @@
     }
     nav .nav-list .search form a.search-btn i{
       font-size: 18px;
+        position: relative;
+        bottom:2px;
+
     }
 
 
