@@ -11,8 +11,11 @@
                     <i class="fa fa-edit"></i>
                     写文章
                 </nuxt-link>
+                <!--登录和注册按钮-->
+                <nuxt-link to="sign-up" class="btn sign-up">注册</nuxt-link>
+                <nuxt-link to="sign-in" class="btn sign-in">登录</nuxt-link>
                 <!--如果用户登录了，那么显示用户头像-->
-                <div class="user" @mouseover="userShow=true" @mouseleave="userShow=false">
+                <div style="display:none;" class="user" @mouseover="userShow=true" @mouseleave="userShow=false">
                     <div class="drop-down">
                         <nuxt-link class="avatar" to="/users">
                             <img src="../assets/img/user.jpg" alt="">
@@ -54,25 +57,68 @@
                     </div>
                 </div>
                 <!--导航-->
-                <div class="container">
+                <div class="my-container">
                     <ul class="nav-list">
-                        <li class="active">
+                        <li class="active hover">
                             <nuxt-link to="/" >
-                                <i class="fa fa-compass"></i>
+                                <i class="fa fa-compass noshow"></i>
                                 <span>发现</span>
                             </nuxt-link>
                         </li>
-                        <li>
+                        <li class="hover">
                             <nuxt-link to="/">
-                                <i class="fa fa-book"></i>
+                                <i class="fa fa-book noshow"></i>
                                 <span>关注</span>
                             </nuxt-link>
                         </li>
-                        <li>
+                        <li class="info-down hover"@mouseover="infoShow=true" @mouseleave="infoShow=false">
                             <nuxt-link to="/">
-                                <i class="fa fa-bell-o"></i>
+                                <i class="fa fa-bell-o noshow"></i>
                                 <span>消息</span>
                             </nuxt-link>
+                            <div class="info-menu" v-show="infoShow">
+                                <ul>
+                                    <li>
+                                        <nuxt-link to="/">
+                                            <i class="fa fa-comment-o"></i>
+                                            评论
+                                        </nuxt-link>
+                                    </li>
+                                    <li>
+                                        <nuxt-link to="/">
+                                            <i class="fa fa-envelope-o"></i>
+                                            简信
+                                        </nuxt-link>
+                                    </li>
+                                    <li>
+                                        <nuxt-link to="/">
+                                            <i class="fa fa-upload"></i>
+                                            投稿请求
+                                        </nuxt-link>
+                                    </li>
+                                    <li>
+                                        <nuxt-link to="/">
+                                            <i class="fa fa-heart-o"></i>
+                                            喜欢和赞
+                                        </nuxt-link>
+                                    </li>
+                                    <li>
+                                        <nuxt-link to="/">
+                                            <i class="fa fa-user-o"></i>
+                                            关注
+                                        </nuxt-link>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="search ">
+                            <form action=""method="post">
+                                <input type="text" placeholder="搜索" @focus="bgShow = true" @blur="bgShow=false">
+                                <nuxt-link to="/search" class="search-btn" :class="{active:bgShow}">
+                                    <i class="fa fa-search"></i>
+                                </nuxt-link>
+                            </form>
+
                         </li>
                     </ul>
                 </div>
@@ -84,7 +130,9 @@
     export default{
         data(){
             return{
-                userShow:false
+                userShow:false,
+                infoShow:false,
+                bgShow:false,
             }
         },
         name:'myHeader',//给组件命名
@@ -110,19 +158,19 @@
         left: 0;
         z-index:9999;
     }
-    .width-limit{
+    nav>.width-limit{
         /*最小宽度是768，内容过多超出768时，宽度由内容决定*/
         min-width: 768px;
         width: 1440px;
         margin: 0 auto;
     }
-    .nav-logo{
+    nav>.width-limit>.nav-logo{
         float: left;
         height:56px;
         padding: 0;
         /*display: block;*/
     }
-    .nav-logo img{
+    nav>.width-limit>.nav-logo img{
         height: 100%;
         /*width: 50%;*/
     }
@@ -139,6 +187,32 @@
     }
     a.write-btn:hover{
         background-color: #ec6149;
+    }
+    nav a.sign-up{
+        float: right;
+        width: 80px;
+        height: 38px;
+        margin: 7px 6px 0 10px;
+        line-height: 24px;
+        font-size: 15px;
+        border: 1px solid #ea6f5a;
+        border-radius: 20px;
+        color:#ea6f5a!important;
+    }
+    nav a.sign-in{
+        float: right;
+        margin: 11px 6px 0 10px;
+        line-height: 24px;
+        font-size: 15px;
+        padding: 6px 12px;
+        color: #969696 !important;
+        border: 0;
+    }
+    nav a.sign-in:active{
+        box-shadow: none;
+    }
+    nav a.sign-up:hover{
+        background-color:#fef7f5;
     }
     nav .user{
         float: right;
@@ -192,43 +266,168 @@
         background-color: #f5f5f5;
     }
     nav .user .drop-menu ul li i{
-        margin-right: 15px;
+        margin-right: 5px;
         color:#ea6f5a;
         font-size: 18px;
     }
     nav .nav-list{
-        overflow: hidden;
         zoom:1;
     }
-    nav .nav-list li{
-        float: left;
+    nav .nav-list:after{
+        content: "";
+        clear: both;
     }
-    nav .nav-list li a{
-        height: 56px;
+    nav .nav-list>li{
+        float: left;
+        margin-right: 5px;
+    }
+    nav .nav-list>li>a{
+        height: 55px;
         display: block;
         padding:15px;
         padding-right: 10px;
         font-size: 17px;
-        /*text-align: center;*/
-
     }
-    nav .nav-list li a i{
+    nav .nav-list>li>a>i{
         margin-right: 7px;
         font-size: 22px;
+        /*margin-top: 5px;*/
+        text-align: center;
     }
-    nav .nav-list li.active{
+    nav .nav-list>li.active{
         color:#ea6f5a;
+        background-color: white!important;
     }
-    @media (max-width:1440px) {
-        nav .nav-list li a i{
+    /**/
+    /*nav  hover事件*/
+    nav .nav-list li.hover:hover{
+        background-color: #f5f5f5;
+    }
+    nav .nav-list .info-down{
+        position: relative;
+    }
+    nav .nav-list .info-down .info-menu{
+        position: absolute;
+        left:0;
+        top:56px;
+        min-width: 170px;
+        box-shadow: 0 0 8px rgba(0,0,0,.1);
+        font-size: 15px;
+        /*z-index: 9999!important;*/
+    }
+    nav .nav-list .info-menu ul{
+        padding: 10px 0;
+    }
+    nav .nav-list .info-menu ul li:hover{
+        background-color: #f5f5f5;
+    }
+    nav .nav-list .info-menu ul li a{
+        padding: 10px 20px;
+        display: block;
+        line-height:40px;
+        font-size: 14px;
+        color:#333;
+/*ul>li>a的固定写法，预先保证li标签已经清除浮动了*/
+    }
+    nav .nav-list .info-menu ul li a i{
+        color: #ea6f5a !important;
+        display: inline-block;
+    }
+    /**********************************************************/
+    nav .nav-list .search{
+        padding-left:15px;
+    }
+    nav .nav-list .search form{
+        margin-top: 9px;
+        position: relative;
+    }
+    nav .nav-list .search form input{
+        border: none;
+        width: 240px;
+        height: 38px;
+        border-radius:20px;
+        background-color: #eee;
+        padding:0 30px 0 20px;
+        font-size: 15px;
+        transition: width ease-in .3s;
+    }
+    nav .nav-list .search form input:focus{
+        width:320px;
+    }
+    nav .nav-list .search form a.search-btn{
+        display: block;
+        position: absolute;
+        right: 10px;
+        top: 4px;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+    }
+    nav .nav-list .search form a.active{
+        background-color: #969696;
+        border-radius: 50%;
+        color:#fff!important;
+
+    }
+    nav .nav-list .search form a.search-btn i{
+      font-size: 18px;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @media(max-width:768px){
+        nav .nav-list{
             display: none;
         }
     }
+    @media (max-width:1440px) {
+        nav .nav-list>li a i.noshow{
+            display: none;
+        }
+        nav .nav-list .search form input{
+            width: 160px;
+        }
+        nav .nav-list .search form input:focus{
+            width: 240px;
+        }
+    }
+    @media(min-width: 768px) and (max-width: 1080px){
+        nav .nav-list .search form input{
+            width: 150px;
+        }
+        nav .nav-list .search form input:focus{
+            width: 150px;
+        }
+    }
     @media (max-width:1080px){
-        nav .nav-list li a i{
+        nav .nav-list>li a i.noshow{
             display: block;
         }
-        nav .nav-list li a span{
+        nav .nav-list>li a span{
             display: none;
         }
     }

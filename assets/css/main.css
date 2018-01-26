@@ -35,5 +35,21 @@ ul,ol,dl {
     padding-top: 56px;
     background-color: #fff;
 }
+.my-container{
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right:15px;
+}
 
+@media (min-width:992px) {
+    .my-container{
+        width:960px!important;
+    }
+}
+@media(max-with:1080px){
+    .my-container{
+        width: 750px!important;
+    }
+}
 
