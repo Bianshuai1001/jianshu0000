@@ -7,6 +7,7 @@ html,body{
     height: 100%;
     background-color: #fff;
     color:#333;
+    overflow-y: scroll;
 }
 a,a:hover,a:focus {
     text-decoration: none!important;
@@ -204,13 +205,21 @@ ul,ol,dl {
     font-weight:400;
 }
 .note-list .meta .collection-tag{
+    display: inline-block;
     color: #ea6f5a !important;
     border:1px solid #ea6f5a;
     padding:3px 6px;
     border-radius: 4px;
     text-align: center;
     margin-right: 10px;
-    transition:all ease-in .1 s;
+    transition:all ease-in 0.1s;
+    /*防止标签过长影响布局，设置最大宽度*/
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+
 }
 .note-list .meta .collection-tag:hover{
     background-color: rgb(254,247,246);
@@ -223,6 +232,35 @@ ul,ol,dl {
     margin-right: 10px;
     color:#b4b4b4!important;
 }
+.index .main .load-more{
+    display: block;
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    line-height: 30px;
+    color:#fff!important;
+    background: #a5a5a5;
+    border-radius: 20px;
+    margin: 30px auto 60px;
+    padding:5px 15px;
+   font-size: 15px;
+}
+.index .main footer{
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+.index .main footer li{
+    float: left;
+    height: 30px;
+    text-align: center;
+}
+
+.index .main footer a{
+    display: inline-block;
+    margin: 0 5px;
+    color: #969696!important;
+    font-size: 13px!important;
+}
 @media(max-width:1080px){
     .note-list li.have-img .wrap-img{
         margin-top: -58px;
@@ -234,26 +272,184 @@ ul,ol,dl {
         padding-right:135px;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
+.index .aside .board{
+    margin-bottom: 4px;
+}
 .index .aside .board img{
     width: 100%;
     margin-bottom:4.5px;
 }
-/***********轮播图样式*************************/
+.recommend-author{
+    margin-bottom:20px;
+    font-size:12px;
+    text-align: center;
+}
+.recommend-author .title{
+    text-align: left;
+    color:#969696;
+}
+.recommend-author .title .page-change{
+    float:right;
+    color:#969696;
+}
+.recommend-author .title .page-change i{
+    transition: all linear 0.2s;
+    /*color:red !important;*/
+}
+.recommend-author .list{
+    margin-bottom: 20px;
+    text-align: left;
+}
+.recommend-author .list li{
+    margin-top: 15px;
+}
+.recommend-author .list li .avatar{
+    float: left;
+    margin-right: 10px;
+    width: 48px;
+    height: 48px;
+}
+.recommend-author .list li .follow{
+    float: right;
+    margin-top: 5px;
+    font-size: 13px!important;
+    color: #42c02e !important;
+}
+.recommend-author .list li .name{
+    display: block;
+    padding-top: 5px;
+    margin-right: 60px;
+    font-size: 14px;
+}
+.recommend-author .list li p{
+    color: #969696 !important;
 
-/***************文章布局***********************/
+}
+.recommend-author .find-more{
+    display: inline-block;
+    width: 100%;
+    padding:7px 7px 7px 12px;
+    background-color:#f7f7f7;
+    border:1px solid #ccc;
+    color: #787878 !important;
+    font-size: 15px!important;
+    border-radius: 10px;
+}
+.recommend-author .find-more i{
+    margin-left: 5px;
+    font-size: 14px;
+}
+.aside .download{
+    display: block;
+    width: 100%;
+    min-height:70px;
+    border:1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    padding:7px 10px;
+    margin-bottom: 30px;
+    position: relative;
+}
+.aside .download:hover .big{
+    display: block;
+}
+.aside .download .small{
+    width: 60px;
+    height: 60px;
+    display: block;
+    float: left;
+}
+.aside .download .big{
+    width: 180px;
+    height: 180px;
+    position: absolute;
+    top:-188px;
+    right:15px;
+    border: 1px solid #000000;
+    display: none;
+    border-radius: 4px;
+}
+.aside .download span{
+    line-height: 60px;
+    font-size: 18px!important;
+    margin-left: 15px;
+    color:gold;
+    animation: change 0.5s  ease-in  infinite ;
+}
+@keyframes change {
+    0%{ text-shadow: 0 0 4px gold}
+    50%{ text-shadow: 0 0 40px gold}
+    100%{ text-shadow: 0 0 4px gold}
+}
+/***************文章页面布局********************************************/
+.note {
+    position: relative;
+    padding-top: 10px;
+}
+.note .post{
+    width: 620px;
+    padding:20px 0 40px 0;
+}
+.note .post .article .title{
+    font-size: 34px;
+    font-weight: 700;
+    margin: 20px 0 0;
+    /*换行*/
+    word-break: break-all;
+}
+.note .post .article .author{
+    margin:30px 0 40px 0;
+}
+.note .post .article .author .avatar{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    boeder:1px solid #ccc;
+}
+.note .post .article .author .info{
+    display: inline-block;
+    margin-left: 20px;
+    vertical-align: middle;
+}
+.note .post .article .author .info a span{
+/*padding:0 10px;*/
+}
+.note .post .article .author .info .name{
+    font-size: 16px;
+    margin-right: 5px;
+}
+.note .post .article .author .info .follow{
+    color:white!important;
+    font-size: 12px;
+    /**************************************************padding挤压******/
+    padding:1px 8px 1px 6px;
+    border-radius: 20px;
+}
+.note .post .article .author .info .no-atte{
+    background-color: #42c02e !important;
+}
+.note .post .article .author .info .atte{
+    background-color: #fff;
+    color: #969696 !important;
+    border:1px solid #969696;
+}
+.note .post .article .author .meta{
+    margin-top: 5px;
+    font-size: 12px;
+    color:#969696;
+}
+.note .post .article .author .meta span{
+    margin-right: 5px;
+}
+
+
+
+
+
+
+
+
 
 /******************用户页面*****************/
 

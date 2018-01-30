@@ -13,7 +13,6 @@
                         <div class="swiper-pagination swiper-pagination-white" slot="pagination"></div>
                         <div class="swiper-button-prev swiper-button-white" slot="button-prev"></div>
                         <div class="swiper-button-next swiper-button-white" slot="button-next"></div>
-
                     </div>
                     <!--推荐专题-->
                     <div class="recommend-collection">
@@ -102,10 +101,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="have-img">
-                                <nuxt-link class="wrap-img" to="/p/123">
-                                    <img src="../assets/img/img-2.jpg" alt="">
-                                </nuxt-link>
+                            <li >
                                 <div class="content">
                                     <div class="author">
                                         <nuxt-link to="/u/123" class="avatar">
@@ -454,10 +450,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="have-img">
-                                <nuxt-link class="wrap-img" to="/p/123">
-                                    <img src="../assets/img/img-4.jpg" alt="">
-                                </nuxt-link>
+                            <li>
                                 <div class="content">
                                     <div class="author">
                                         <nuxt-link to="/u/123" class="avatar">
@@ -500,6 +493,18 @@
                             </li>
                         </ul>
                     </div>
+                    <!--阅读更多-->
+                    <nuxt-link to="/" class="load-more">
+                         阅读更多
+                    </nuxt-link>
+                    <footer >
+                        <ul class="footer-list">
+                                    <li><nuxt-link to="/">关于项目</nuxt-link></li>
+                                    <li><nuxt-link to="/">邮箱:1548620765@qq.com</nuxt-link></li>
+                                    <li><nuxt-link to="/">作者：且诺余生</nuxt-link></li>
+                                    <li><nuxt-link to="/">精诚所至，金石为开</nuxt-link></li>
+                                </ul>
+                    </footer>
                 </div>
                 <div class="col-4 aside">
                     <div class="board">
@@ -519,9 +524,105 @@
                             <img src="../assets/img/banner-5.png" alt="">
                         </nuxt-link>
                     </div>
+                    <nuxt-link to="/" class="download">
+                        <img src="../assets/img/weixin.png" alt="" class="big">
+                        <img src="../assets/img/weixin.png" alt="" class="small">
+                        <span>联&nbsp;系&nbsp;作&nbsp;者</span>
+                    </nuxt-link>
+                    <div class="recommend-author">
+                        <div class="title">
+                            <span>推荐作者</span>
+                            <a href="javascript:void(0)" class="page-change" @click="rotate">
+                                <i class="fa fa-refresh" ref="refresh"></i>
+                                换一批
+                            </a>
+                        </div>
+                        <ul class="list">
+                            <li>
+                                <nuxt-link class="avatar" to="/u/123">
+                                    <img src="../assets/img/tag-1.jpg" alt="">
+                                </nuxt-link>
+                                <nuxt-link class="follow" to="/u/123">
+                                    关注
+                                    <i class="fa fa-plus-square-o"></i>
+                                </nuxt-link>
+                                <nuxt-link to="/u/123" class="name">
+                                    占小浪
+                                </nuxt-link>
+                                <p>
+                                    写了152.9k字·7.2k喜欢
+                                </p>
+                            </li>
+                            <li>
+                                <nuxt-link class="avatar" to="/u/123">
+                                    <img src="../assets/img/tag-2.jpg" alt="">
+                                </nuxt-link>
+                                <nuxt-link class="follow" to="/u/123">
+                                    关注
+                                    <i class="fa fa-plus-square-o"></i>
+                                </nuxt-link>
+                                <nuxt-link to="/u/123" class="name">
+                                    占小浪
+                                </nuxt-link>
+                                <p>
+                                    写了152.9k字·7.2k喜欢
+                                </p>
+                            </li>
+                            <li>
+                                <nuxt-link class="avatar" to="/u/123">
+                                    <img src="../assets/img/tag-3.jpg" alt="">
+                                </nuxt-link>
+                                <nuxt-link class="follow" to="/u/123">
+                                    关注
+                                    <i class="fa fa-plus-square-o"></i>
+                                </nuxt-link>
+                                <nuxt-link to="/u/123" class="name">
+                                    占小浪
+                                </nuxt-link>
+                                <p>
+                                    写了152.9k字·7.2k喜欢
+                                </p>
+                            </li>
+                            <li>
+                                <nuxt-link class="avatar" to="/u/123">
+                                    <img src="../assets/img/tag-4.jpg" alt="">
+                                </nuxt-link>
+                                <nuxt-link class="follow" to="/u/123">
+                                    关注
+                                    <i class="fa fa-plus-square-o"></i>
+                                </nuxt-link>
+                                <nuxt-link to="/u/123" class="name">
+                                    占小浪
+                                </nuxt-link>
+                                <p>
+                                    写了152.9k字·7.2k喜欢
+                                </p>
+                            </li>
+                            <li>
+                                <nuxt-link class="avatar" to="/u/123">
+                                    <img src="../assets/img/tag-5.jpg" alt="">
+                                </nuxt-link>
+                                <nuxt-link class="follow" to="/u/123">
+                                    关注
+                                    <i class="fa fa-plus-square-o"></i>
+                                </nuxt-link>
+                                <nuxt-link to="/u/123" class="name">
+                                    占小浪
+                                </nuxt-link>
+                                <p>
+                                    写了152.9k字·7.2k喜欢
+                                </p>
+                            </li>
+                        </ul>
+                        <nuxt-link to="/" class="find-more">
+                            查看更多
+                            <i class="fa fa-angle-right"></i>
+                        </nuxt-link>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 <script>
@@ -553,17 +654,26 @@
                         nextEl: '.swiper-button-next',
                         prevEl: '.swiper-button-prev'
                     },
-                }
+                },
+                deg:0,
             }
         },
         components:{
             myHeader
         },
+        methods:{
+            rotate:function () {
+                this.deg = this.deg + 360
+                console.log(this.$refs.refresh)
+                this.$refs.refresh.style.transform = `rotate(${this.deg}deg)`;
+                console.log(this.deg);
+            }
+        }
     }
 </script>
 <style>
     .swiper-button-next,.swiper-button-prev{
-        background-color: rgb(0,0,0,0.4);
+        background-color:rgba(0,0,0,0.4);
     }
 
 
