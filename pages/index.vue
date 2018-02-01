@@ -527,6 +527,7 @@
                     <nuxt-link to="/" class="download">
                         <img src="../assets/img/weixin.png" alt="" class="big">
                         <img src="../assets/img/weixin.png" alt="" class="small">
+                        <img src="../assets/img/sanjiao.png" alt="" class="sanjiao">
                         <span>联&nbsp;系&nbsp;作&nbsp;者</span>
                     </nuxt-link>
                     <div class="recommend-author">
@@ -540,14 +541,14 @@
                         <ul class="list">
                             <li>
                                 <nuxt-link class="avatar" to="/u/123">
-                                    <img src="../assets/img/tag-1.jpg" alt="">
+                                    <img src="../assets/img/touxiang.jpg" alt="">
                                 </nuxt-link>
                                 <nuxt-link class="follow" to="/u/123">
                                     关注
                                     <i class="fa fa-plus-square-o"></i>
                                 </nuxt-link>
                                 <nuxt-link to="/u/123" class="name">
-                                    占小浪
+                                    且诺余生
                                 </nuxt-link>
                                 <p>
                                     写了152.9k字·7.2k喜欢
@@ -562,7 +563,7 @@
                                     <i class="fa fa-plus-square-o"></i>
                                 </nuxt-link>
                                 <nuxt-link to="/u/123" class="name">
-                                    占小浪
+                                    简书出版
                                 </nuxt-link>
                                 <p>
                                     写了152.9k字·7.2k喜欢
@@ -577,7 +578,7 @@
                                     <i class="fa fa-plus-square-o"></i>
                                 </nuxt-link>
                                 <nuxt-link to="/u/123" class="name">
-                                    占小浪
+                                    雪花如糖
                                 </nuxt-link>
                                 <p>
                                     写了152.9k字·7.2k喜欢
@@ -592,7 +593,7 @@
                                     <i class="fa fa-plus-square-o"></i>
                                 </nuxt-link>
                                 <nuxt-link to="/u/123" class="name">
-                                    占小浪
+                                    名贵的考拉熊
                                 </nuxt-link>
                                 <p>
                                     写了152.9k字·7.2k喜欢
@@ -607,7 +608,7 @@
                                     <i class="fa fa-plus-square-o"></i>
                                 </nuxt-link>
                                 <nuxt-link to="/u/123" class="name">
-                                    占小浪
+                                    POPO熊
                                 </nuxt-link>
                                 <p>
                                     写了152.9k字·7.2k喜欢
