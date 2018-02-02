@@ -47,7 +47,7 @@
                             <nuxt-link to="/" class="avatar">
                                 <img src="../../assets/img/tag-1.jpg" alt="">
                             </nuxt-link>
-                            <a href="javascript:void(0)" class="btn btn-success follow":class="atteObj" @click="atteShow()"@mouseenter="yiru()"@mouseleave="yichu()">
+                            <a href="javascript:void(0)" class="btn btn-success follow":class="atteObj" @click="atteShow()"@mouseenter="yiru2()"@mouseleave="yichu2()">
                                 <i class="fa" :class="iconObj" ref="icon2"></i>
                                 <span ref="guanzhuText2">关注</span>
                             </a>
@@ -63,15 +63,20 @@
                     </div>
                     <div class="meta-bottom">
                         <div class="like">
-                            <div class="btn like-group"@click="changeColor()":class="changeObj">
+                            <div class="btn like-group":class="changeObj">
                                <div class="btn-like">
-                                   <a href="javascript:void(0)">
+                                   <a href="javascript:void(0)"@click="changeColor()">
                                        <i class="fa" :class="heartObj"></i>
                                        <span>喜欢</span>
                                    </a>
                                </div>
                                <div class="modal-wrap">
-                                    <a ref="likecount">34</a>
+                                    <a  @click="showModal">{{likecount}}</a>
+                                   <b-modal ref="myModalRef" hide-footer title="喜欢的用户" class="like-modal">
+                                       <div class="d-block text-center">
+
+                                       </div>
+                                   </b-modal>
                                 </div>
                             </div>
                         </div>
@@ -114,17 +119,21 @@
                         </div>
                     </div>
                 </div>
+                <!--回复组件-->
+                <my-comment></my-comment>
 
             </div>
             <!--悬浮的操作框-->
             <div class="side-bar"></div>
+            <!--对应的推荐阅读-->
+            <div class="note-bottom"></div>
         </div>
-        <!--对应的推荐阅读-->
-        <div class="note-bottom"></div>
     </div>
 </template>
 <script>
     import myHeader from '~/components/myHeader'
+    import myComment from '~/components/myComment'
+
     export default{
         data(){
             return{
@@ -144,11 +153,13 @@
                 heartObj:{
                     'fa-heart-o':true,
                     'fa-heart':false
-                }
+                },
+                likecount:66,
             }
         },
         components:{
             myHeader,
+            myComment,
         },
         methods:{
             atteShow:function () {
@@ -167,8 +178,6 @@
                 if(text == '已关注'){
                     this.$refs.icon.className = 'fa fa-close';
                     this.$refs.guanzhuText.innerHTML = '取消关注';
-                    this.$refs.icon2.className = 'fa fa-close';
-                    this.$refs.guanzhuText2.innerHTML = '取消关注';
                 }
             },
             yichu:function () {
@@ -176,6 +185,19 @@
                 if(text == '取消关注'){
                     this.$refs.icon.className = 'fa fa-check';
                     this.$refs.guanzhuText.innerHTML = '已关注';
+                }
+            },
+//          为了使两个关注按钮的移入移出事件互不影响，设置连个函数
+            yiru2:function () {
+                let text = this.$refs.guanzhuText2.innerHTML;
+                if(text == '已关注'){
+                    this.$refs.icon2.className = 'fa fa-close';
+                    this.$refs.guanzhuText2.innerHTML = '取消关注';
+                }
+            },
+            yichu2:function () {
+                let text = this.$refs.guanzhuText2.innerHTML;
+                if(text == '取消关注'){
                     this.$refs.icon2.className = 'fa fa-check';
                     this.$refs.guanzhuText2.innerHTML = '已关注';
                 }
@@ -185,14 +207,15 @@
                 this.changeObj['change-like'] = ! this.changeObj['change-like'];
                 this.heartObj['fa-heart-o'] = ! this.heartObj['fa-heart-o'];
                 this.heartObj['fa-heart'] = ! this.heartObj['fa-heart']
-                let count =  this.$refs.likecount.innerHTML
-                let count2 = Number(count)
+//                let count =  this.$refs.likecount.innerHTML
+//                let count2 = Number(count)
 //                console.log(typeof(count2));
                 this.like = ! this.like;
                 if(this.like){
-                    this.$refs.likecount.innerHTML = count2 + 1;
+                    this.likecount =  this.likecount + 1;
+//                    预留发送ajax请求的地方
                 }else{
-                    this.$refs.likecount.innerHTML = count2 - 1;
+                    this.likecount =  this.likecount - 1;
                 }
 
             },
@@ -202,6 +225,12 @@
             nomore:function () {
                 this.$refs.moreul.style.display = 'none';
 
+            },
+            showModal () {
+                this.$refs.myModalRef.show()
+            },
+            hideModal () {
+                this.$refs.myModalRef.hide()
             }
         }
     }
