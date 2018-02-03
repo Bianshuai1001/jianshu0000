@@ -81,14 +81,51 @@
                             <div class="meta">
                                 <span>
                                     {{comment.floor}}楼
-                                    {{comment.created_at}}
+                                    {{comment.created_at | time}}
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="comment-wrap"></div>
+                    <div class="comment-wrap">
+                        <p>{{comment.compiled_content}}</p>
+                        <div class="tool-group">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-thumbs-o-up"></i>
+                                <span>{{comment.likes_count}}人点赞</span>
+                            </a>
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-comment-o"></i>
+                                <span>回复</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="sub-comment-list"></div>
+                <!--二级回复-->
+                <div class="sub-comment-list" v-if="comment.children.length!= 0">
+                    <div v-for="(subComment,index) in comment.children" :id="'comment-'+subComment.id" class="sub-comment">
+                        <p>
+                            <nuxt-link to="/u/123">
+                                {{subComment.user.nick_name}}
+                            </nuxt-link>:
+                            <span v-html="subComment.compiled_content"></span>
+                        </p>
+                        <div class="sub-tool-group">
+                            <span>{{subComment.created_at | time}}</span>
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-comment-o"></i>
+                                <span>回复</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="more-comment">
+                        <a href="javascript:void(0)" class="add-comment-btn">
+                            <i class="fa fa-pencil"></i>
+                            <span>添加新评论</span>
+                        </a>
+                    </div>
+                </div>
+                <!--显示表单-->
+
             </div>
         </div>
     </div>
@@ -105,22 +142,22 @@
                 value:'',
                 comments:[
                     {
-                        id:19935725,
+                        id:19935720,
                         liked:true,
-                        floor:2,
-                        likes_count:12,
+                        floor:5,
+                        likes_count:2,
                         note_id:23054702,
-                        user_id:6780849,
+                        user_id:6780949,
                         user:{
                             avatar:'/tag-1.jpg',
-                            id:6780849,
+                            id:6780949,
                             is_author:false,
-                            nickname:'月薪2800不知道怎么花',
+                            nickname:'倾城之恋',
                             badgue:null,
                         },
-                        created_at:"2018-01-28T15:42:26.000+08:00",
+                        created_at:"2018-01-28T17:42:26.000+08:00",
                         children_count:3,
-                        compiled_content:"祝贺你",
+                        compiled_content:"剧情的反转,只是为了心中的那点期待",
                         children:[
                             {
                                 id:2088369,
@@ -178,44 +215,7 @@
                         children_count:3,
                         compiled_content:"临睡前又被暖了一把，棒棒哒，看开头还以为是复仇文呢" +
                         "，没想到最后最后给我撒了把狗粮 😁 喜欢",
-                        children:[
-                            {
-                                id:2088369,
-                                user_id:2604707,
-                                user:{
-                                    id:1604707,
-                                    nick_name:'nuoyan'
-                                },
-                                parent_id:19965725,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"是你飘了",
-
-                            },
-                            {
-                                id:2088366,
-                                user_id:2604717,
-                                user:{
-                                    id:1604717,
-                                    nick_name:'nihao'
-                                },
-                                parent_id:19965726,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"是你飘了haha",
-
-                            },
-                            {
-                                id:2088369,
-                                user_id:2604707,
-                                user:{
-                                    id:1604707,
-                                    nick_name:'gushidawang'
-                                },
-                                parent_id:19965725,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"兄弟，你是天才,我就服你",
-
-                            },
-                        ]
+                        children:[ ]
                     },
                     {
                         id:20112755,
@@ -330,23 +330,60 @@
                         ]
                     },
                     {
-                        id:19935789,
+                        id:19935720,
                         liked:true,
-                        floor:6,
-                        likes_count:0,
+                        floor:5,
+                        likes_count:2,
                         note_id:23054702,
-                        user_id:6780908,
+                        user_id:6780949,
                         user:{
                             avatar:'/tag-1.jpg',
-                            id:6780908,
+                            id:6780949,
                             is_author:false,
-                            nickname:'倾城之恋123',
+                            nickname:'倾城之恋',
                             badgue:null,
                         },
-                        created_at:"2018-01-28T18:42:26.000+08:00",
-                        children_count:0,
-                        compiled_content:"我还以为男的也不要她了。结局好评",
-                        children:[],
+                        created_at:"2018-01-28T17:42:26.000+08:00",
+                        children_count:3,
+                        compiled_content:"剧情的反转,只是为了心中的那点期待",
+                        children:[
+                            {
+                                id:2088369,
+                                user_id:2604707,
+                                user:{
+                                    id:1604707,
+                                    nick_name:'nuoyan'
+                                },
+                                parent_id:19965725,
+                                created_at:"2018-01-28T15:49:26.000+08:00",
+                                compiled_content:"是你飘了",
+
+                            },
+                            {
+                                id:2088366,
+                                user_id:2604717,
+                                user:{
+                                    id:1604717,
+                                    nick_name:'nihao'
+                                },
+                                parent_id:19965726,
+                                created_at:"2018-01-28T15:49:26.000+08:00",
+                                compiled_content:"是你飘了haha",
+
+                            },
+                            {
+                                id:2088369,
+                                user_id:2604707,
+                                user:{
+                                    id:1604707,
+                                    nick_name:'gushidawang'
+                                },
+                                parent_id:19965725,
+                                created_at:"2018-01-28T15:49:26.000+08:00",
+                                compiled_content:"兄弟，你是天才,我就服你",
+
+                            },
+                        ]
                     },
                 ]
             }
@@ -362,7 +399,7 @@
             sendData:function () {
                 console.log('发送value的信息给后端');
             },
-        }
+        },
     }
 </script>
 <style>
@@ -514,6 +551,9 @@
         padding:20px 0 30px 0;
         border: 1px solid #f0f0f0;
     }
+    .note .post .comment-list .comment .author{
+        margin-bottom: 15px;
+    }
     .note .post .comment-list .comment .info {
         display: inline-block;
         vertical-align: middle;
@@ -525,6 +565,59 @@
         font-size: 12px;
         coloc:#969696;
     }
-
-
+    .note .post .comment-list .comment p{
+        font-size: 16px;
+        margin: 10px 0;
+        line-height: 1.5;
+        word-break: break-all!important;
+    }
+    .note .post .comment-list .comment .tool-group a{
+        color: #969696 !important;
+        margin-right: 10px;
+    }
+    .note .post .comment-list .comment .tool-group a i{
+        font-size: 18px;
+        margin-right: 5px;
+    }
+    .note .post .comment-list .comment .tool-group a span{
+        font-size: 14px;
+    }
+    .note .post .comment-list .sub-comment-list {
+        border-left: 2px solid #d9d9d9;
+        margin-top: 20px;
+        padding:5px 0 5px 20px;
+    }
+    .note .post .comment-list .sub-comment{
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #f0f0f0;
+    }
+    .note .post .comment-list .sub-comment p{
+        font-size: 14px;
+        line-height: 1.5;
+        border-bottom: 5px;
+    }
+    .note .post .comment-list .sub-comment p a{
+        color: #3194d0 !important;
+    }
+    .note .post .comment-list .sub-tool-group{
+        font-size: 12px;
+        color:#969696;
+    }
+    .note .post .comment-list .sub-tool-group a{
+        margin-left: 10px;
+    }
+    .note .post .comment-list .sub-tool-group a i{
+        margin-right: 5px;
+    }
+    .note .post .comment-list .more-comment{
+        color:#969696;
+        font-size: 14px;
+    }
+    .note .post .comment-list .more-comment a i{
+        margin-right: 5px;
+    }
+    .note .post .comment-list .more-comment a:hover{
+        color: #333333 !important;
+    }
 </style>

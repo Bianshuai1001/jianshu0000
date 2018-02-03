@@ -374,10 +374,10 @@
 
     }
     nav .nav-list .search form a.search-btn i{
-      font-size: 18px;
+        font-size: 18px;
         position: relative;
         bottom:2px;
-
+        /*font-weight: 100;*/
     }
 
 

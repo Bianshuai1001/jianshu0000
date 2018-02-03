@@ -2,6 +2,14 @@
 *{
     box-sizing: border-box;
 }
+.clearfix:after{
+    content:'';
+    clear:both;
+    height:0;
+    visibility: hidden;
+    display: block;
+}
+/*清除浮动统一样式，要放在浮动元素的父标签上*/
 html,body{
 
     height: 100%;
@@ -44,8 +52,7 @@ ul,ol,dl {
     padding-left: 15px;
     padding-right:15px;
 }
-
-@media (min-width:992px) {
+@media(min-width:992px) {
     .my-container{
         width:960px;
     }
@@ -53,6 +60,16 @@ ul,ol,dl {
 @media(max-width:1080px){
     .my-container{
         width: 750px;
+    }
+}
+@media(max-width: 750px){
+   body{
+       overflow-x: hidden;
+   }
+}
+@media(max-width:785px){
+    .note .post{
+        margin: 0 74px;
     }
 }
 /****************************首页布局*******************************/
@@ -251,7 +268,6 @@ ul,ol,dl {
     height: 30px;
     text-align: center;
 }
-
 .index .main footer a{
     display: inline-block;
     margin: 0 5px;
@@ -574,6 +590,13 @@ background: rgb(254,247,245);
 .note .post .article .meta-bottom .like-group .modal-wrap a{
     padding:18px 30px 18px 17px;
 }
+/***************喜欢个数的点击事件************************************/
+.note .post .article .meta-bottom .like-group .modal-wrap .like-modal{
+    color: #333 !important;
+    position: relative!important;
+    top:200px!important;
+    font-size: 17px!important;
+}
 .note .post .article .meta-bottom .share-group a{
     display: inline-block;
     width: 50px;
@@ -657,6 +680,65 @@ background: rgb(254,247,245);
 .github{
     color:green;
 }
+/***************评论区域的加载动画*******************/
+.comment-placeholder{
+    padding:20px 0 30px 0;
+}
+.comment-placeholder .author{
+    margin-bottom: 15px;
+}
+.comment-placeholder .author .avatar{
+    background-color: #eaeaea;
+    border-radius: 50%;
+}
+.comment-placeholder .author .info{
+    display: inline-block;
+}
+.comment-placeholder .author .info .name{
+    width: 60px;
+    height: 15px;
+    margin-bottom: 6px;
+    background: #eaeaea;
+}
+.comment-placeholder .author .info .meta{
+    width: 120px;
+    height: 12px;
+    background: #eaeaea;
+}
+.comment-placeholder .title{
+    width: 100%;
+    height: 16px;
+    background: #eaeaea;
+    margin-bottom: 8px;
+    animation: loading 1s ease-in-out infinite;
+}
+.comment-placeholder .animated-delay{
+    animation: loading 1s ease-in-out -.5s infinite;
+}
+@keyframes loading {
+    0%{
+        width:30%;
+    }
+    50%{
+        width:100%;
+    }
+    100%{
+        width:30%;
+    }
+}
+.comment-placeholder .tool-group i{
+    margin-right: 5px;
+    color: #eaeaea !important;
+}
+.comment-placeholder .tool-group .zan{
+    width: 40px;
+    height: 14px;
+    margin-right:10px;
+    display: inline-block;
+    background: #eaeaea;
+}
+
+/*******************************************************/
 
 
 
