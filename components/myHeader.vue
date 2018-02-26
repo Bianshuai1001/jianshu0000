@@ -12,10 +12,10 @@
                     写文章
                 </nuxt-link>
                 <!--登录和注册按钮-->
-                <nuxt-link to="/sign-up" class="btn sign-up">注册</nuxt-link>
-                <nuxt-link to="/sign-in" class="btn sign-in">登录</nuxt-link>
+                <nuxt-link v-if="!showAvatar" to="sign-up" class="btn sign-up">注册</nuxt-link>
+                <nuxt-link v-if="!showAvatar" to="sign-in" class="btn sign-in">登录</nuxt-link>
                 <!--如果用户登录了，那么显示用户头像-->
-                <div style="display:none;" class="user" @mouseover="userShow=true" @mouseleave="userShow=false">
+                <div v-if="showAvatar" class="user" @mouseover="userShow=true" @mouseleave="userShow=false">
                     <div class="drop-down">
                         <nuxt-link class="avatar" to="/users">
                             <img src="../assets/img/user.jpg" alt="">
@@ -24,30 +24,30 @@
                     <div class="drop-menu" v-show="userShow">
                         <ul>
                             <li>
-                                <nuxt-link to="/">
+                                <nuxt-link to="/u/123">
                                     <i class="fa fa-home"></i>
                                     我的主页
                                 </nuxt-link>
                             </li>
                             <li>
-                                <nuxt-link to="/">
+                                <nuxt-link to="/bookmarks">
                                     <i class="fa fa-bookmark"></i>
                                     收藏的文章
                                 </nuxt-link>
                             </li>
                             <li>
-                                <nuxt-link to="/">
+                                <nuxt-link to="/u/123/liked_notes">
                                     <i class="fa fa-heart"></i>
                                     喜欢的文章
                                 </nuxt-link>
                             </li>
                             <li>
-                                <nuxt-link to="/">
+                                <nuxt-link to="/settings/basic" @click="showAvatar = !showAvatar">
                                     <i class="fa fa-cog"></i>
                                     设置
                                 </nuxt-link>
                             </li>
-                            <li>
+                            <li @click="signOut">
                                 <nuxt-link to="/">
                                     <i class="fa fa-sign-out"></i>
                                     退出
@@ -59,53 +59,58 @@
                 <!--导航-->
                 <div class="my-container">
                     <ul class="nav-list">
-                        <li class="active hover">
+                        <li class=" hover" :class="{active:this.$route.path == '/'}" >
                             <nuxt-link to="/" >
                                 <i class="fa fa-compass noshow"></i>
                                 <span>发现</span>
                             </nuxt-link>
                         </li>
-                        <li class="hover">
-                            <nuxt-link to="/">
+                        <li class="hover" :class="{active:this.$route.path == '/subscriptions'}">
+                            <nuxt-link to="/subscriptions">
                                 <i class="fa fa-book noshow"></i>
                                 <span>关注</span>
                             </nuxt-link>
                         </li>
-                        <li class="info-down hover"@mouseover="infoShow=true" @mouseleave="infoShow=false">
-                            <nuxt-link to="/">
+                        <li class="info-down hover"@mouseover="infoShow=true" @mouseleave="infoShow=false"
+                            :class="{active:this.$route.path == '/notifications/comments'
+                            |this.$route.path == '/notifications/chats'
+                            |this.$route.path =='/notifications/requests'
+                            |this.$route.path =='/notifications/likes'
+                            |this.$route.path == '/notifications/follows'}">
+                            <nuxt-link to="/notifications/comments">
                                 <i class="fa fa-bell-o noshow"></i>
                                 <span>消息</span>
                             </nuxt-link>
                             <div class="info-menu" v-show="infoShow">
                                 <ul>
                                     <li>
-                                        <nuxt-link to="/">
+                                        <nuxt-link to="/notifications/comments">
                                             <i class="fa fa-comment-o"></i>
-                                            评论
+                                            <span>评论</span>
                                         </nuxt-link>
                                     </li>
                                     <li>
                                         <nuxt-link to="/notifications/chats">
                                             <i class="fa fa-envelope-o"></i>
-                                            简信
+                                            <span>简信</span>
                                         </nuxt-link>
                                     </li>
                                     <li>
-                                        <nuxt-link to="/">
+                                        <nuxt-link to="/notifications/requests">
                                             <i class="fa fa-upload"></i>
-                                            投稿请求
+                                            <span>投稿请求</span>
                                         </nuxt-link>
                                     </li>
                                     <li>
                                         <nuxt-link to="/notifications/likes">
                                             <i class="fa fa-heart-o"></i>
-                                            喜欢和赞
+                                            <span>喜欢和赞</span>
                                         </nuxt-link>
                                     </li>
                                     <li>
-                                        <nuxt-link to="/">
+                                        <nuxt-link to="/notifications/follows">
                                             <i class="fa fa-user-o"></i>
-                                            关注
+                                            <span>关注</span>
                                         </nuxt-link>
                                     </li>
                                 </ul>
@@ -118,7 +123,6 @@
                                     <i class="fa fa-search"></i>
                                 </nuxt-link>
                             </form>
-
                         </li>
                     </ul>
                 </div>
@@ -133,9 +137,17 @@
                 userShow:false,
                 infoShow:false,
                 bgShow:false,
+                showAvatar:true,
             }
         },
         name:'myHeader',//给组件命名
+        methods:{
+            signOut:function () {
+                if(this.$route.path == '/'){
+                    this.showAvatar = false;
+                }
+            }
+        }
 
     }
 </script>
@@ -252,6 +264,7 @@
         min-width: 160px;
         box-shadow: 0 0 8px rgba(0,0,0,.1);
         font-size: 15px;
+        background-color: #fff;
     }
     nav .user .drop-menu ul{
         border: 1px solid #ccc;
@@ -311,31 +324,37 @@
     nav .nav-list .info-down .info-menu{
         position: absolute;
         left:0;
-        top:56px;
+        top:54px;
         min-width: 170px;
+        padding:5px 0;
+        margin: 2px 0 0;
         box-shadow: 0 0 8px rgba(0,0,0,.1);
         font-size: 15px;
         background-color: white;
         z-index: 9999;
+        color:#000!important;
     }
-    nav .nav-list .info-menu ul{
+    nav .nav-list .info-down .info-menu ul{
         padding: 10px 0;
     }
-    nav .nav-list .info-menu ul li:hover{
+    nav .nav-list .info-down .info-menu ul li:hover{
         background-color: #f5f5f5;
     }
-    nav .nav-list .info-menu ul li a{
+    nav .nav-list .info-down .info-menu ul li a{
         padding: 10px 20px;
         display: block;
         line-height:40px;
-        font-size: 14px;
-        color:#333;
+        font-size: 14px!important;
+        color: #333333 !important;
 /*ul>li>a的固定写法，预先保证li标签已经清除浮动了*/
     }
-    nav .nav-list .info-menu ul li a i{
+    nav .nav-list .info-down .info-menu ul li a i{
         color: #ea6f5a !important;
         display: inline-block;
+        font-size: 22px!important;
+        margin-right: 15px;
     }
+
     /**********************************************************/
     nav .nav-list .search{
         padding-left:15px;
@@ -377,34 +396,7 @@
         font-size: 18px;
         position: relative;
         bottom:2px;
-        /*font-weight: 100;*/
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @media(max-width:768px){
         nav .nav-list{
             display: none;
@@ -420,6 +412,7 @@
         nav .nav-list .search form input:focus{
             width: 240px;
         }
+
     }
     @media(min-width: 768px) and (max-width: 1080px){
         nav .nav-list .search form input{
@@ -433,8 +426,16 @@
         nav .nav-list>li a i.noshow{
             display: block;
         }
-        nav .nav-list>li a span{
+        nav .nav-list>li>a>span{
             display: none;
+        }
+        nav .nav-list .info-down .info-menu{
+            width: 170px;
+        }
+    }
+    @media(min-width:1080px){
+        nav .nav-list .info-down .info-menu{
+        width: 200px!important;
         }
     }
 </style>

@@ -74,7 +74,6 @@
                                     <a  @click="showModal">{{likecount}}</a>
                                    <b-modal ref="myModalRef" hide-footer title="喜欢的用户" class="like-modal">
                                        <div class="d-block text-center">
-
                                        </div>
                                    </b-modal>
                                 </div>
@@ -133,7 +132,6 @@
 <script>
     import myHeader from '~/components/myHeader'
     import myComment from '~/components/myComment'
-
     export default{
         data(){
             return{
@@ -187,7 +185,7 @@
                     this.$refs.guanzhuText.innerHTML = '已关注';
                 }
             },
-//          为了使两个关注按钮的移入移出事件互不影响，设置两个函数
+//          为了使两个关注按钮的移入移出事件互不影响，设置连个函数
             yiru2:function () {
                 let text = this.$refs.guanzhuText2.innerHTML;
                 if(text == '已关注'){

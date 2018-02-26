@@ -55,7 +55,7 @@
                         </li>
                         <li class="qq">
                             <a href="#">
-                                <i class="fa fa-qq"></i>
+                                <i class="fa fa-qq" style="color:white!important;"></i>
                             </a>
                         </li>
                         <li class="other">

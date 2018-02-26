@@ -52,6 +52,19 @@ ul,ol,dl {
     padding-left: 15px;
     padding-right:15px;
 }
+.find-nothing{
+    margin-top: 150px;
+    text-align: center;
+}
+.find-nothing img{
+    width: 100px;
+}
+.find-nothing div{
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
 @media(min-width:992px) {
     .my-container{
         width:960px;
@@ -503,6 +516,7 @@ ul,ol,dl {
     float: left;
     margin-right: 10px;
 }
+/********************************************/
 .note .post .article .follow-detail .btn{
     float: right;
     box-shadow: none;
@@ -554,6 +568,7 @@ ul,ol,dl {
     border-radius: 40px;
     padding:13px 0 15px;
     color:#ea6f5a;
+    border:1px solid #ea6f5a;
 }
 .note .post .article .meta-bottom .like .change-nolike {
 border-color: #ea6f5a;
@@ -737,8 +752,216 @@ background: rgb(254,247,245);
     display: inline-block;
     background: #eaeaea;
 }
+/**************************个人主页样式*****************************/
+.user>.my-container>.row{
+    padding-top: 30px !important;
+}
+.user .row .main .main-top{
+    margin-bottom: 20px;
+}
+.user .row .main .main-top .avatar{
+    float: left;
+    width: 80px;
+    height: 80px;
+    display: block;
+}
+.user .row .main .main-top .avatar img{
+    width: 100%;
+    height: 100%;
+    border:1px solid #ddd;
+    border-radius: 50%;
+}
+.user .row .main .main-top>.title{
+    padding:5px 0 0 100px;
+}
+.user .row .main .title a{
+    display: inline;
+    font-size: 21px;
+    font-weight: 700;
+    vertical-align: middle;
+    color:#333;
 
-/*******************************************************/
+}
+.user .row .main .info{
+    display: inline-block;
+}
+.user .row .main .info ul{
+    margin-left: 20px;
+}
+.user .row .main .info ul li{
+    display: inline-block;
+    line-height: 20px;
+}
+.user .row .main .info li .meta-block{
+    font-size: 12px;
+    margin: 0 7px 6px 0;
+    padding: 0 7px 0 0;
+    color: #969696 !important;
+    display: inline-block;
+    border-right: 1px solid #f0f0f0;
+}
+.user .row .main .info li .meta-block a{
+    display: inline-block;
+}
+.user .row .main .info li .meta-block a p{
+    margin-bottom: -3px;
+    font-size: 15px;
+    color: #333333 !important;
+}
+/***************************个人主页动态组件**************/
+.user .row .main #outer-container .trigger-menu{
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.user .row .main #outer-container .trigger-menu li{
+    display: inline-block;
+    padding-top: 8px!important;
+    padding-bottom: 0px !important;
+    margin-bottom: -1px;
+    position: relative;
+    cursor: pointer;
+}
+/*hoverborder  动画样式*/
+.user .row .main #outer-container .trigger-menu li:hover a{
+    color: #333333 !important;
+}
+.user .row .main #outer-container .trigger-menu li.active{
+    border-bottom: 2px solid #646464;
+}
+.user .row .main #outer-container .trigger-menu li a{
+    padding: 13px 20px 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #646464 !important;
+    line-height: 25px;
+    display: inline-block;
+    margin-bottom:8px;
+}
+.user .row .main #outer-container .trigger-menu li a::after:hover{
+    animation:change 0.5s ease-in infinite;
+}
+.user .row .aside{
+    /*margin-left: 4.16667%;*/
+}
+.user .row .aside>a{
+    display: block;
+    margin-bottom: 20px;
+}
+.user .aside .description{
+    /*position: relative;*/
+    margin-bottom: 16px;
+    padding: 0 0 16px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+    clear: both;
+    word-break: break-word!important;
+}
+.user .row .aside .title{
+    float:left;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #969696 !important;
+}
+.user .row .aside .function-btn{
+    float: right;
+    font-size: 13px;
+    color:#969696;
+}
+.user .row .aside form{
+    margin-bottom: 20px;
+
+}
+.user .row .aside form textarea{
+    width:100%;
+    height:125px;
+    font-size: 14px;
+    margin-bottom: 5px;
+    padding:5px 10px;
+    border:1px solid #ccc;
+    border-radius: 4px;
+    display:inline-block;
+    vertical-align: top;
+    outline-style: none;
+    resize: none;
+    font-size:13px;
+}
+.user .row .aside form input{
+    padding:5px 20px;
+    font-size: 14px;
+    border: 1px solid #42c02e;
+    background-color: #fff;
+    color: #42c02e !important;
+    border-radius: 20px;
+}
+.user .row .aside form a{
+    margin-left: 10px;
+    font-size: 14px;
+    color:#969696;
+    vertical-align: middle;
+    line-height: 34px;
+}
+.user .row .aside .user-dynamic{
+    padding-bottom:6px;
+}
+.user .row .aside .list{
+    margin-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.user .row .aside .list li{
+
+}
+.user .row .aside .list li a{
+    display: inline-block;
+    font-size: 14px;
+    color: #333333 !important;
+    line-height: 30px;
+    vertical-align: middle;
+    margin: 6px 0;
+}
+.user .row .aside .list li a i{
+    font-size: 22px;
+    margin-right: 10px;
+    line-height: 30px;
+    vertical-align: middle;
+}
+
+.user .row .aside .zhuanti .new-collection-block {
+    position: relative;
+    margin-bottom: 16px;
+    padding: 0 0 16px;
+    text-align: left;
+    /*font-size: 0;*/
+    border-bottom: 1px solid #f0f0f0;
+    clear: both;
+    word-break: break-word!important;
+}
+.user .row .aside .zhuanti .new-collection-block span{
+    font-size: 14px;
+}
+.user .row .aside .zhuanti .new-collection-block a{
+    font-size: 13px;
+    color: #42c02e!important;
+}
+.user .row .aside .zhuanti .new-collection-block i{
+    margin-right: 10px;
+}
+.user .row .aside .zhuanti .new-collection-block>i{
+    color: #969696 !important;
+}
+/*********************收藏的文章页面***********************/
+.bookmarks .row{
+    padding-top:30px;
+}
+.bookmarks .row .main{
+    margin-left:120px;
+    padding:0 15px;
+}
+.bookmarks .row .main>img{
+    width: 100%;
+    margin-bottom: 30px;
+}
+/********************************个人信息设置页面样式************************************/
+
 
 
 

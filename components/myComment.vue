@@ -111,7 +111,7 @@
                                 <span v-html="subComment.compiled_content"></span>
                             </p>
                             <div class="sub-tool-group">
-                                <span>{{subComment.create_at|time}}</span>
+                                <span>{{subComment.create_at| time}}</span>
                                 <a href="javascript:void(0)">
                                     <i class="fa fa-comment-o"></i>
                                     <span>回复</span>
@@ -127,7 +127,7 @@
                         <!--要显示的表单-->
                         <transition :duration="200" name="fade">
                             <form v-if="activeIndex.includes(index)" class="new-comment">
-                                <textarea v-focus placeholder="写下你的评论"></textarea>
+                                <textarea v-focus placeholder="写下你的评论" v-model="SubCommentList[index]"></textarea>
                                 <div class="write-function-block clearfix">
                                     <div class="emoji-modal-wrap">
                                         <a href="javascript:void(0)" class="emoji" @click="showSubEmoji(index)">
@@ -180,6 +180,7 @@
                             is_author:false,
                             nick_name:'七岁就很拽',
                             badge:null,
+
                         },
                         create_at:'2018-01-25T09:38:14.000+08:00',
                         children_count:4,
@@ -231,6 +232,7 @@
                             is_author:false,
                             nick_name:'七岁就很拽',
                             badge:null,
+
                         },
                         compiled_content:'作为一名混凝土方块移动工程师，我一直以3000的月薪骄傲，甚至一度迷失自我。。。看了楼主这篇文章，我找回了初心',
                         children_count:3,
@@ -292,6 +294,7 @@
                 ],
                 activeIndex:[],
                 emojiIndex:[],
+                SubCommentList:[],
             }
         },
         methods:{
@@ -305,10 +308,17 @@
             showSubCommentForm:function(value){
                 if(this.activeIndex.includes(value)){
                     let index = this.activeIndex.indexOf(value);
+                    this.SubCommentList[value]='';
                     this.activeIndex.splice(index,1);
                 }else{
                     this.activeIndex.push(value);
+//                    清除表单中的内容
+                    this.SubCommentList[value]='';
+//                    将表情也关掉
+                    this.emojiIndex = [];
+
                 }
+
             },
             sendSubCommentData:function(value){
                 let index = this.activeIndex.indexOf(value);
@@ -317,6 +327,7 @@
             closeSubComment:function(value){
                 let index = this.activeIndex.indexOf(value);
                 this.activeIndex.splice(index,1);
+                this.SubCommentList[index]='';
             },
             showSubEmoji:function(value){
                 if(this.emojiIndex.includes(value)){
@@ -327,7 +338,16 @@
                 }
             },
             selectSubEmoji:function(code){
-                console.log(this.$refs.emoji);
+//                当前下标
+                let index = this.emojiIndex[0];
+//              将表情所代表的code值放入表单当中
+                if(this.SubCommentList[index] == null){
+                  this.SubCommentList[index] =''
+                }
+                this.SubCommentList[index] += code;
+//              关掉emoji弹出框
+                this.emojiIndex = [];
+
             }
         },
         components:{

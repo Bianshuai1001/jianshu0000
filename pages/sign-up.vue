@@ -55,7 +55,7 @@
                         </li>
                         <li class="qq">
                             <a href="#">
-                                <i class="fa fa-qq"></i>
+                                <i class="fa fa-qq" style="color:white!important;"></i>
                             </a>
                         </li>
                     </ul>
@@ -90,10 +90,10 @@
             margin:0 auto;
         }
     }
-    /*html,body {*/
-    /*height:100%;*/
-    /*background-color:#f1f1f1!important;*/
-    /*}*/
+    html,body {
+    height:100%;
+    background-color:#f1f1f1!important;
+    }
     .sign {
         height:100%;
         font-size:14px;
