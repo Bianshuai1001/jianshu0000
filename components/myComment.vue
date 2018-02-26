@@ -1,409 +1,357 @@
 <template>
-    <div><div id="comment-list" class="comment-list">
-        <!--提交的留言表单-->
-        <form action="" class="new-comment">
-            <nuxt-link to="/u/123" class="avatar">
-                <img src="../assets/img/tag-2.jpg" alt="">
-            </nuxt-link>
-            <textarea @focus="send=true" placeholder="写下你的评论" v-model="value">
-
-            </textarea>
-            <transition name="fade">
-                <div v-if="send" class="write-function-block clearfix">
-                    <div class="emoji-modal-wrap ">
-                        <a href="javascript:void(0)" class="emoji" @click="showEmoji = ! showEmoji">
-                            <i class="fa fa-smile-o"></i>
+    <div>
+        <div id="comment-list" class="comment-list">
+            <!--提交的留言表单-->
+            <form class="new-comment">
+                <nuxt-link class="avatar" to="/u/213">
+                    <img src="../assets/img/tag-1.jpg">
+                </nuxt-link>
+                <textarea @focus="sendCommentBtn=true" placeholder="写下你的评论" v-model="commentData"></textarea>
+                <transition :duration="200" name="fade">
+                    <div v-if="sendCommentBtn" class="write-function-block clearfix">
+                        <div class="emoji-modal-wrap">
+                            <a href="javascript:void(0)" @click="showEmoji=!showEmoji" class="emoji">
+                                <i class="fa fa-smile-o"></i>
+                            </a>
+                            <transition :duration="200" name="fade">
+                                <div v-if="showEmoji" class="emoji-modal arrow-up">
+                                    <vue-emoji @select="selectEmoji"></vue-emoji>
+                                </div>
+                            </transition>
+                        </div>
+                        <div class="hint">
+                            Ctrl+Enter 发表
+                        </div>
+                        <a class="btn btn-send" href="javascript:void(0)" @click="sendComment">发送</a>
+                        <a class="cancel" href="javascript:void(0)" @click="sendCommentBtn=false">取消</a>
+                    </div>
+                </transition>
+            </form>
+            <!--留言的列表-->
+            <div id="normal-comment-list" class="normal-comment-list">
+                <!--留言的排序-->
+                <div class="top-title">
+                    <span>25条评论</span>
+                    <a class="author-only" href="javascript:void(0)">
+                        只看作者
+                    </a>
+                    <div class="pull-right">
+                        <a class="active" href="javascript:void(0)">
+                            按喜欢排序
                         </a>
-                        <transition name="fade">
-                            <div class="emoji-modal arrow-up" v-if="showEmoji">
-                               <vue-emoji @select="selectEmoji"></vue-emoji>
+                        <a href="javascript:void(0)">
+                            按时间正序
+                        </a>
+                        <a href="javascript:void(0)">
+                            按时间倒序
+                        </a>
+                    </div>
+                </div>
+                <!--留言的正文-->
+                <div class="comment-placeholder" style="display:none">
+                    <div class="author">
+                        <div class="avatar"></div>
+                        <div class="info">
+                            <div class="name"></div>
+                            <div class="meta"></div>
+                        </div>
+                    </div>
+                    <div class="title"></div>
+                    <div class="title animated-delay"></div>
+                    <div class="tool-group">
+                        <i class="fa fa-thumbs-up"></i>
+                        <div class="zan"></div>
+                        <i class="fa fa-comment"></i>
+                        <div class="zan"></div>
+                    </div>
+                </div>
+                <div :id="'comment-'+comment.id" v-for="(comment,index) in comments" class="comment">
+                    <div class="comment-content">
+                        <div class="author">
+                            <nuxt-link class="avatar" to="/u/123">
+                                <img :src="comment.user.avatar">
+                            </nuxt-link>
+                            <div class="info">
+                                <nuxt-link class="name" to="/u/123">
+                                    {{comment.user.nick_name}}
+                                </nuxt-link>
+                                <div class="meta">
+                                    <span>
+                                        {{comment.floor}}楼·
+                                        {{comment.create_at | time}}
+                                    </span>
+                                </div>
                             </div>
+                        </div>
+                        <div class="comment-wrap">
+                            <p>
+                                {{comment.compiled_content}}
+                            </p>
+                            <div class="tool-group">
+                                <a href="javascript:void(0)">
+                                    <i class="fa fa-thumbs-o-up"></i>
+                                    <span>
+                                        {{comment.likes_count}}人点赞
+                                    </span>
+                                </a>
+                                <a href="javascript:void(0)">
+                                    <i class="fa fa-comment-o"></i>
+                                    <span>回复</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="comment.children.length != 0" class="sub-comment-list">
+                        <div v-for="(subComment,index) in comment.children" :id="'comment-' + subComment.id" class="sub-comment">
+                            <p>
+                                <nuxt-link to="/u/123">
+                                    {{subComment.user.nick_name}}
+                                </nuxt-link>
+                                :
+                                <span v-html="subComment.compiled_content"></span>
+                            </p>
+                            <div class="sub-tool-group">
+                                <span>{{subComment.create_at|time}}</span>
+                                <a href="javascript:void(0)">
+                                    <i class="fa fa-comment-o"></i>
+                                    <span>回复</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="sub-comment more-comment">
+                            <a class="add-comment-btn" @click="showSubCommentForm(index)" href="javascript:void(0)">
+                                <i class="fa fa-pencil"></i>
+                                <span>添加新评论</span>
+                            </a>
+                        </div>
+                        <!--要显示的表单-->
+                        <transition :duration="200" name="fade">
+                            <form v-if="activeIndex.includes(index)" class="new-comment">
+                                <textarea v-focus placeholder="写下你的评论"></textarea>
+                                <div class="write-function-block clearfix">
+                                    <div class="emoji-modal-wrap">
+                                        <a href="javascript:void(0)" class="emoji" @click="showSubEmoji(index)">
+                                            <i class="fa fa-smile-o"></i>
+                                        </a>
+                                        <transition :duration="200" name="fade">
+                                            <div v-if="emojiIndex.includes(index)" class="emoji-modal arrow-up">
+                                                <vue-emoji ref="emoji" @select="selectSubEmoji"></vue-emoji>
+                                            </div>
+                                        </transition>
+                                    </div>
+                                    <div class="hint">
+                                        Ctrl+Enter 发表
+                                    </div>
+                                    <a class="btn btn-send" href="javascript:void(0)" @click="sendSubCommentData(index)">
+                                        发送
+                                    </a>
+                                    <a class="cancel" href="javascript:void(0)" @click="closeSubComment(index)">
+                                        取消
+                                    </a>
+                                </div>
+                            </form>
                         </transition>
                     </div>
-                    <div class="hint">
-                        Ctrl+Enter 发表
-                    </div>
-                    <!--****************************************a标签的事件-->
-                    <a href="javascript:void(0)" class="btn btn-send" @click="sendData">发送</a>
-                    <a href="javascript:void(0)" class="cancel" @click="send=false">取消</a>
                 </div>
-            </transition>
-        </form>
-        <!--留言的列表-->
-        <div id="normal-comment-list" class="normal-comment-list">
-            <!--留言的排序-->
-            <div class="top-title">
-                <span>5条评论</span>
-                <a href="javascript:void(0)" class="author-only">只看作者</a>
-                <div class="pull-right">
-                    <a href="javascript:void(0)" class="active">
-                        按喜欢排序
-                    </a>
-                    <a href="javascript:void(0)">
-                        按时间正序
-                    </a>
-                    <a href="javascript:void(0)">
-                        按时间倒序
-                    </a>
-                </div>
-            </div>
-            <!--留言的正文-->
-            <!--下拉加载时的动画-->
-            <div class="comment-placeholder" style="display: none;">
-                <div class="author">
-                    <div class="avatar"></div>
-                    <div class="info">
-                        <div class="name"></div>
-                        <div class="meta"></div>
-                    </div>
-                </div>
-                <div class="title"></div>
-                <div class="title animated-delay"></div>
-                <div class="tool-group">
-                    <i class="fa fa-thumbs-up"></i>
-                    <div class="zan"></div>
-                    <i class="fa fa-comment"></i>
-                    <div class="zan"></div>
-                </div>
-            </div>
-            <div :id="'comment-'+comment.id" v-for="(comment,index) in comments" class="comment">
-                <div class="comment-content">
-                    <div class="author">
-
-                            <nuxt-link to="/u/123" class="avatar">
-                                <img :src="comment.user.avatar" alt="">
-                            </nuxt-link>
-
-                        <div class="info">
-                            <nuxt-link to="/u/123" class="name">
-                                {{comment.user.nickname}}
-                            </nuxt-link>
-                            <div class="meta">
-                                <span>
-                                    {{comment.floor}}楼
-                                    {{comment.created_at | time}}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="comment-wrap">
-                        <p>{{comment.compiled_content}}</p>
-                        <div class="tool-group">
-                            <a href="javascript:void(0)">
-                                <i class="fa fa-thumbs-o-up"></i>
-                                <span>{{comment.likes_count}}人点赞</span>
-                            </a>
-                            <a href="javascript:void(0)">
-                                <i class="fa fa-comment-o"></i>
-                                <span>回复</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <!--二级回复-->
-                <div class="sub-comment-list" v-if="comment.children.length!= 0">
-                    <div v-for="(subComment,index) in comment.children" :id="'comment-'+subComment.id" class="sub-comment">
-                        <p>
-                            <nuxt-link to="/u/123">
-                                {{subComment.user.nick_name}}
-                            </nuxt-link>:
-                            <span v-html="subComment.compiled_content"></span>
-                        </p>
-                        <div class="sub-tool-group">
-                            <span>{{subComment.created_at | time}}</span>
-                            <a href="javascript:void(0)">
-                                <i class="fa fa-comment-o"></i>
-                                <span>回复</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="more-comment">
-                        <a href="javascript:void(0)" class="add-comment-btn">
-                            <i class="fa fa-pencil"></i>
-                            <span>添加新评论</span>
-                        </a>
-                    </div>
-                </div>
-                <!--显示表单-->
-
             </div>
         </div>
-    </div>
     </div>
 </template>
 <script>
     import vueEmoji from '~/components/vueEmoji'
-    export default{
+    export default {
         name:'myComment',
-        data(){
-            return{
-                send:false,
+        data () {
+            return {
+                sendCommentBtn:false,
                 showEmoji:false,
-                value:'',
+                commentData:'',
                 comments:[
                     {
-                        id:19935720,
+                        id:19935725,
+                        floor:2,
                         liked:true,
-                        floor:5,
-                        likes_count:2,
+                        likes_count:20,
                         note_id:23054702,
-                        user_id:6780949,
+                        user_id:6780849,
                         user:{
                             avatar:'/tag-1.jpg',
-                            id:6780949,
+                            id:6780849,
                             is_author:false,
-                            nickname:'倾城之恋',
-                            badgue:null,
+                            nick_name:'七岁就很拽',
+                            badge:null,
                         },
-                        created_at:"2018-01-28T17:42:26.000+08:00",
-                        children_count:3,
-                        compiled_content:"剧情的反转,只是为了心中的那点期待",
+                        create_at:'2018-01-25T09:38:14.000+08:00',
+                        children_count:4,
+                        compiled_content:'今年25岁的我，年纪轻轻月薪就已经达到2800了，加上提成满勤再加上我天生的睿智头脑，平常帮客人拿下拖鞋点下烟得点小费可以拿到3100。觉得自己这几年过得也不容易，现在这么有钱，都不知道怎么花了，开始花钱大手大脚了，以前网吧包夜都是喝自来水，现在敢喝红茶了，还是一晚上买两瓶，甚至打电话出去叫炒河粉而且还要加个鸡蛋，我觉得现在有点迷失自我，有什么办法？希望能回到初心！',
                         children:[
                             {
-                                id:2088369,
+                                id:20116365,
                                 user_id:2604707,
                                 user:{
-                                    id:1604707,
-                                    nick_name:'nuoyan'
+                                    id:2604707,
+                                    nick_name:'Bowman_'
                                 },
-                                parent_id:19965725,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"是你飘了",
-
+                                parent_id:19935725,                                         create_at:'2018-01-30T11:23:03.000+08:00',
+                                compiled_content:'兄die,我也和你有着一样的困惑，甚至一度迷失自我...'
                             },
                             {
-                                id:2088366,
-                                user_id:2604717,
+                                id:20122216,
+                                user_id:9933465,
                                 user:{
-                                    id:1604717,
-                                    nick_name:'nihao'
+                                    id:9933465,
+                                    nick_name:'美女荷官'
                                 },
-                                parent_id:19965726,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"是你飘了haha",
-
+                                parent_id:19935725,                                         create_at:'2018-01-30T14:25:32.000+08:00',
+                                compiled_content:'是你李大钊飘了,还是我陈独秀拿不动刀了'
                             },
                             {
-                                id:2088369,
-                                user_id:2604707,
+                                id:20122226,
+                                user_id:9964877,
                                 user:{
-                                    id:1604707,
-                                    nick_name:'gushidawang'
+                                    id:9964877,
+                                    nick_name:'保坤文化传媒'
                                 },
-                                parent_id:19965725,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"兄弟，你是天才,我就服你",
-
+                                parent_id:19935725,                                         create_at:'2018-01-30T14:25:49.000+08:00',
+                                compiled_content:'哈哈。。'
                             },
                         ]
                     },
                     {
-                        id:19996810,
-                        liked:true,
+                        id:19935796,
                         floor:3,
-                        likes_count:10,
-                        note_id:23054702,
-                        user_id:6780840,
-                        user:{
-                            avatar:'/tag-1.jpg',
-                            id:6780840,
-                            is_author:false,
-                            nickname:'月薪2800不知道怎么花',
-                            badgue:null,
-                        },
-                        created_at:"2018-01-28T15:59:26.000+08:00",
-                        children_count:3,
-                        compiled_content:"临睡前又被暖了一把，棒棒哒，看开头还以为是复仇文呢" +
-                        "，没想到最后最后给我撒了把狗粮 😁 喜欢",
-                        children:[ ]
-                    },
-                    {
-                        id:20112755,
                         liked:false,
+                        likes_count:30,
+                        create_at: "2018-01-25T09:40:18.000+08:00",
+                        note_id:23054702,
+                        user_id:6780849,
+                        user:{
+                            avatar:'/tag-1.jpg',
+                            id:6780849,
+                            is_author:false,
+                            nick_name:'七岁就很拽',
+                            badge:null,
+                        },
+                        compiled_content:'作为一名混凝土方块移动工程师，我一直以3000的月薪骄傲，甚至一度迷失自我。。。看了楼主这篇文章，我找回了初心',
+                        children_count:3,
+                        children:[
+                            {
+                                id:19949215,
+                                parent_id:19935796,
+                                user_id:5954136,
+                                user:{
+                                    id:5954136,
+                                    nick_name:'与笑颜开'
+                                },
+                                create_at:'2018-01-25T16:55:40.000+08:00',
+                                compiled_content:'混凝土方块移动工程师是啥子工作，我咋没听过？我也做过混凝土这行'
+                            },
+                            {
+                                id:20062029,
+                                parent_id:19935796,
+                                user_id:8914781,
+                                user:{
+                                    id:8914781,
+                                    nick_name:'向天再借5厘米'
+                                },
+                                create_at:'2018-01-28T21:06:14.000+08:00',
+                                compiled_content:'<a href="/users/88ad9c9678a6" class="maleskine-author" target="_blank" data-user-slug="88ad9c9678a6">@与笑颜开</a> 搬砖'
+                            },
+                            {
+                                id:20122231,
+                                parent_id:19935796,
+                                user_id:9964877,
+                                user:{
+                                    id:9964877,
+                                    nick_name:'保坤文化传媒'
+                                },
+                                create_at:'2018-01-25T16:55:40.000+08:00',
+                                compiled_content:'好有意思。'
+                            },
+                        ]
+                    },
+                    {
+                        children: [],
+                        children_count:0,
+                        compiled_content: "楼上评论的都是大佬啊",
+                        create_at: "2018-01-29T11:26:53.000+08:00",
                         floor:4,
-                        likes_count:6,
-                        note_id:23054702,
-                        user_id: 8195200,
-                        user:{
-                            avatar:'/tag-1.jpg',
-                            id: 8195200,
-                            is_author:false,
-                            nickname:'快乐的海星',
-                            badgue:null,
-                        },
-                        created_at:"2018-01-28T15:42:26.000+08:00",
-                        children_count:3,
-                        compiled_content:"现实很残酷，但爱情更无价！！结局暖心，好棒！！",
-                        children:[
-                            {
-                                id:2088369,
-                                user_id:2604707,
-                                user:{
-                                    id:1604707,
-                                    nick_name:'nuoyan'
-                                },
-                                parent_id:19965725,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"是你飘了",
-
-                            },
-                            {
-                                id:2088366,
-                                user_id:2604717,
-                                user:{
-                                    id:1604717,
-                                    nick_name:'nihao'
-                                },
-                                parent_id:19965726,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"是你飘了haha",
-
-                            },
-                            {
-                                id:2088369,
-                                user_id:2604707,
-                                user:{
-                                    id:1604707,
-                                    nick_name:'gushidawang'
-                                },
-                                parent_id:19965725,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"兄弟，你是天才,我就服你",
-
-                            },
-                        ]
-                    },
-                    {
-                        id:19935720,
-                        liked:true,
-                        floor:5,
+                        id:20080144,
+                        liked:false,
                         likes_count:2,
-                        note_id:23054702,
-                        user_id:6780949,
-                        user:{
-                            avatar:'/tag-1.jpg',
-                            id:6780949,
-                            is_author:false,
-                            nickname:'倾城之恋',
-                            badgue:null,
-                        },
-                        created_at:"2018-01-28T17:42:26.000+08:00",
-                        children_count:3,
-                        compiled_content:"剧情的反转,只是为了心中的那点期待",
-                        children:[
+                        note_id: 23054702,
+                        user:
                             {
-                                id:2088369,
-                                user_id:2604707,
-                                user:{
-                                    id:1604707,
-                                    nick_name:'nuoyan'
-                                },
-                                parent_id:19965725,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"是你飘了",
-
+                                id: 3160769,
+                                nick_name: "yuebiubiu",
+                                is_author:false,
+                                avatar:'/tag-1.jpg'
                             },
-                            {
-                                id:2088366,
-                                user_id:2604717,
-                                user:{
-                                    id:1604717,
-                                    nick_name:'nihao'
-                                },
-                                parent_id:19965726,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"是你飘了haha",
-
-                            },
-                            {
-                                id:2088369,
-                                user_id:2604707,
-                                user:{
-                                    id:1604707,
-                                    nick_name:'gushidawang'
-                                },
-                                parent_id:19965725,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"兄弟，你是天才,我就服你",
-
-                            },
-                        ]
-                    },
-                    {
-                        id:19935720,
-                        liked:true,
-                        floor:5,
-                        likes_count:2,
-                        note_id:23054702,
-                        user_id:6780949,
-                        user:{
-                            avatar:'/tag-1.jpg',
-                            id:6780949,
-                            is_author:false,
-                            nickname:'倾城之恋',
-                            badgue:null,
-                        },
-                        created_at:"2018-01-28T17:42:26.000+08:00",
-                        children_count:3,
-                        compiled_content:"剧情的反转,只是为了心中的那点期待",
-                        children:[
-                            {
-                                id:2088369,
-                                user_id:2604707,
-                                user:{
-                                    id:1604707,
-                                    nick_name:'nuoyan'
-                                },
-                                parent_id:19965725,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"是你飘了",
-
-                            },
-                            {
-                                id:2088366,
-                                user_id:2604717,
-                                user:{
-                                    id:1604717,
-                                    nick_name:'nihao'
-                                },
-                                parent_id:19965726,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"是你飘了haha",
-
-                            },
-                            {
-                                id:2088369,
-                                user_id:2604707,
-                                user:{
-                                    id:1604707,
-                                    nick_name:'gushidawang'
-                                },
-                                parent_id:19965725,
-                                created_at:"2018-01-28T15:49:26.000+08:00",
-                                compiled_content:"兄弟，你是天才,我就服你",
-
-                            },
-                        ]
-                    },
-                ]
+                        user_id:3160769
+                    }
+                ],
+                activeIndex:[],
+                emojiIndex:[],
+            }
+        },
+        methods:{
+            selectEmoji:function(code){
+                this.showEmoji = false;
+                this.commentData += code;
+            },
+            sendComment:function(){
+                console.log('发送');
+            },
+            showSubCommentForm:function(value){
+                if(this.activeIndex.includes(value)){
+                    let index = this.activeIndex.indexOf(value);
+                    this.activeIndex.splice(index,1);
+                }else{
+                    this.activeIndex.push(value);
+                }
+            },
+            sendSubCommentData:function(value){
+                let index = this.activeIndex.indexOf(value);
+                this.activeIndex.splice(index,1);
+            },
+            closeSubComment:function(value){
+                let index = this.activeIndex.indexOf(value);
+                this.activeIndex.splice(index,1);
+            },
+            showSubEmoji:function(value){
+                if(this.emojiIndex.includes(value)){
+                    this.emojiIndex = [];
+                }else{
+                    this.emojiIndex = [];
+                    this.emojiIndex.push(value);
+                }
+            },
+            selectSubEmoji:function(code){
+                console.log(this.$refs.emoji);
             }
         },
         components:{
-            vueEmoji,
+            vueEmoji
         },
-        methods:{
-            selectEmoji:function (code) {
-                this.showEmoji = false;
-                this.value += code;
-            },
-            sendData:function () {
-                console.log('发送value的信息给后端');
-            },
+        directives: {
+            // 除了默认设置的核心指令( v-model 和 v-show ),Vue 也允许注册自定义指令。
+            // 对纯 DOM 元素进行底层操作
+            // 注册局部指令，在模板中任何元素上使用新的 v-focus 属性
+            "focus": {
+                // 钩子函数：bind inserted update componentUpdated unbind
+                // 钩子函数的参数：el，binding，vnode，oldVnode
+                bind:function(el,binding,vnode,oldVnode){
+                    el.focus();
+                },
+                inserted: function (el) {
+                    // 聚焦元素
+                    el.focus()
+                }
+            }
         },
     }
 </script>
 <style>
-    /*<!--弹框下降动画-->*/
     .fade-enter-active,.fade-leave-active {
         opacity: 1;
         transition: .3s;
@@ -416,208 +364,215 @@
         transition: .3s;
         -webkit-transition: .3s
     }
-    .note .post .comment-list{
-        padding-top: 20px;
+    .note .post .comment-list {
+        padding-top:20px;
     }
-    .note .post .comment-list .new-comment{
-        position: relative;
-        margin-left: 48px;
-        margin-bottom: 20px;
+    .note .post .comment-list .new-comment {
+        position:relative;
+        margin-left:48px;
+        margin-bottom:20px;
     }
-    .note .post .comment-list .avatar{
-        width: 38px;
-        height: 38px;
-        display: inline-block;
-        margin-right: 5px;
+    .note .post .comment-list .avatar {
+        width:38px;
+        height:38px;
+        display:inline-block;
+        margin-right:5px;
     }
-    .note .post .comment-list .new-comment .avatar{
-        position: absolute;
-        left: -48px;
+    .note .post .comment-list .new-comment .avatar {
+        position:absolute;
+        left:-48px;
     }
-    .note .post .comment-list .new-comment textarea{
-        width: 100%;
-        height: 80px;
+    .note .post .comment-list .new-comment textarea {
+        width:100%;
+        height:80px;
         padding:10px 15px;
         border:1px solid #ccc;
         border-radius: 4px;
-        display: inline-block;
+        display:inline-block;
         vertical-align: top;
-        outline-style:none ;
+        outline-style: none;
         resize: none;
-        font-size: 13px;
-        background-color: #f8f8f8;
-        /*z-index: 4000;*/
+        font-size:13px;
+        background:#f8f8f8;
     }
-    .note .post .comment-list .new-comment .emoji-modal-wrap{
-        position: relative;
+    .note .post .comment-list .new-comment .emoji-modal-wrap {
+        position:relative;
     }
-    .note .post .comment-list .new-comment .emoji{
-        float: left;
-        margin-top: 14px;
+    .note .post .comment-list .new-comment .emoji {
+        float:left;
+        margin-top:14px;
     }
-    .note .post .comment-list .new-comment .emoji i{
-        font-size: 25px;
+    .note .post .comment-list .new-comment .emoji i {
+        font-size:25px;
         color:#969696;
     }
-    .note .post .comment-list .new-comment .emoji i:hover{
+    .note .post .comment-list .new-comment .emoji i:hover {
         color:#333;
     }
-    .note .post .comment-list .new-comment .hint{
-        float: left;
-        margin: 20px 0 0 20px;
+    .note .post .comment-list .new-comment .hint {
+        float:left;
+        margin:20px 0 0 20px;
+        font-size:13px;
         color:#969696;
-        font-size: 13px;
     }
-    .note .post .comment-list .new-comment .cancel{
-        float: right;
-        font-size: 16px;
-        margin: 18px 30px 0 0 ;
+    .note .post .comment-list .new-comment .cancel {
+        float:right;
+        font-size:16px;
+        margin:18px 30px 0 0;
         color:#969696!important;
     }
-    .note .post .comment-list .new-comment .cancel:hover{
-        color: #333333 !important;
+    .note .post .comment-list .new-comment .cancel:hover {
+        color:#333!important;
     }
-    .note .post .comment-list .new-comment .btn-send{
-        float: right;
-        width: 78px;
+    .note .post .comment-list .new-comment .btn-send {
+        float:right;
+        width:78px;
         padding:8px 18px;
         margin:10px 0;
-        font-size: 18px;
-        background-color: #42c02e;
+        font-size:16px;
+        background:#42c02e;
         border-radius: 20px;
-        color: #ffffff !important;
-        text-align: center;
+        color:#fff!important;
         box-shadow: none;
     }
-    .note .post .comment-list .new-comment .btn-send:hover{
-        background-color: #3db922;
+    .note .post .comment-list .new-comment .btn-send:hover {
+        background:#3db922;
     }
-    .note .post .comment-list .new-comment .emoji-modal-wrap .emoji-modal{
-        position: absolute;
+    .note .post .comment-list .new-comment .emoji-modal-wrap .emoji-modal {
+        position:absolute;
         top:50px;
-        left: -48px;
-        width: 402px;
-        height: 208px;
+        left:-48px;
+        width:402px;
+        height:208px;
         padding:10px;
-        border: 1px solid #d9d9d9;
-        border-radius: 4px;
-        box-shadow: 0 5px 25px rgba(0,0,0,0.1);
-        z-index: 10001;
-        background-color: white;
+        border:1px solid #d9d9d9;
+        border-radius:4px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+        background:#fff;
+        z-index:10001;
     }
-    /*空心三角形书写方法*/
-    .arrow-up:after{
-        width: 15px;
-        height: 15px;
-        content: '';
-        display: inline-block;
-        border-bottom:1px solid #d9d9d9;
-        border-right:1px solid #d9d9d9;
-        position: absolute;
-        left: 48px;
-        top: -1px;
-        background: #fff;
-        transform: translate3d(0,-50%,0) rotate(-135deg);
+    .arrow-up:after {
+        content:'';
+        display:inline-block;
+        position:absolute;
+        left:53px;
+        top:-1px;
+        width:10px;
+        height:10px;
+        border-left: 1px solid #d9d9d9;
+        border-top: 1px solid #d9d9d9;
+        background:#fff;
+        transform: translate3d(0,-50%,0) rotate(45deg);
     }
-    .note .post .comment-list .normal-comment-list{
-        margin-top: 30px;
+    .note .post .comment-list .normal-comment-list {
+        margin-top:30px;
     }
-    .note .post .comment-list .top-title{
-        padding-bottom: 20px;
-        border-bottom: 1px solid #f0f0f0;
+    .note .post .comment-list .top-title {
+        padding-bottom:20px;
+        border-bottom:1px solid #f0f0f0;
     }
-    .note .post .comment-list .top-title span{
-        font-size: 17px;
-        font-weight: 700;
+    .note .post .comment-list .top-title span {
+        font-size:17px;
+        font-weight:700;
     }
-    .note .post .comment-list .top-title .author-only{
-        font-size: 12px;
+    .note .post .comment-list .top-title .author-only {
+        font-size:12px;
         padding:4px 8px;
-        border: 1px solid #e1e1e1;
-        border-radius: 12px;
-        color: #969696 !important;
-        margin-left: 10px;
-
+        border:1px solid #e1e1e1;
+        border-radius:12px;
+        color:#969696!important;
+        margin-left:10px;
     }
-    .note .post .comment-list .top-title .pull-right a{
-        margin-left: 10px;
-        font-size: 12px;
-        color: #969696 !important;
+    .note .post .comment-list .top-title .pull-right a {
+        margin-left:10px;
+        font-size:12px;
+        color:#969696!important;
     }
-    .note .post .comment-list .top-title .pull-right a.active{
-        color: #2f2f2f !important;
+    .note .post .comment-list .top-title .pull-right a.active {
+        color:#2f2f2f!important;
     }
-    .note .post .comment-list .comment{
+    .note .post .comment-list .comment {
         padding:20px 0 30px 0;
-        border: 1px solid #f0f0f0;
+        border-bottom:1px solid #f0f0f0;
     }
-    .note .post .comment-list .comment .author{
-        margin-bottom: 15px;
+    .note .post .comment-list .comment .author {
+        margin-bottom:15px;
     }
-    .note .post .comment-list .comment .info {
-        display: inline-block;
+    .note .post .comment-list .info {
+        display:inline-block;
         vertical-align: middle;
     }
-    .note .post .comment-list .comment .info .name{
-        font-size: 15px;
+    .note .post .comment-list .info .name {
+        font-size:15px;
     }
-    .note .post .comment-list .comment .info .meta{
-        font-size: 12px;
-        coloc:#969696;
+    .note .post .comment-list .info .meta {
+        font-size:12px;
+        color:#969696;
     }
-    .note .post .comment-list .comment p{
-        font-size: 16px;
-        margin: 10px 0;
-        line-height: 1.5;
-        word-break: break-all!important;
+    .note .post .comment-list .comment p {
+        font-size:16px;
+        margin:10px 0;
+        line-height:1.5;
+        word-break: break-word!important;
     }
-    .note .post .comment-list .comment .tool-group a{
-        color: #969696 !important;
-        margin-right: 10px;
+    .note .post .comment-list .comment .tool-group a {
+        color:#969696!important;
+        margin-right:10px;
     }
-    .note .post .comment-list .comment .tool-group a i{
-        font-size: 18px;
-        margin-right: 5px;
+    .note .post .comment-list .comment .tool-group a i {
+        font-size:18px;
+        margin-right:5px;
     }
-    .note .post .comment-list .comment .tool-group a span{
-        font-size: 14px;
+    .note .post .comment-list .comment .tool-group a span {
+        font-size:14px;
     }
     .note .post .comment-list .sub-comment-list {
-        border-left: 2px solid #d9d9d9;
-        margin-top: 20px;
+        border-left:2px solid #d9d9d9;
+        margin-top:20px;
         padding:5px 0 5px 20px;
     }
-    .note .post .comment-list .sub-comment{
-        padding-bottom: 15px;
+    .note .post .comment-list .sub-comment {
+        padding-bottom:15px;
+        margin-bottom:15px;
+        border-bottom:1px dashed #f0f0f0;
+    }
+    .note .post .comment-list .sub-comment-list .sub-comment:last-child {
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+    .note .post .comment-list .sub-comment p {
+        font-size:14px;
+        line-height:1.5;
+        margin-bottom:5px;
+    }
+    .note .post .comment-list .sub-comment p a {
+        color:#3194d0!important;
+    }
+    .note .post .comment-list .sub-tool-group {
+        font-size:12px;
+        color:#969696;
+    }
+    .note .post .comment-list .sub-tool-group a {
+        margin-left:10px;
+    }
+    .note .post .comment-list .sub-tool-group a i {
+        margin-right:5px;
+    }
+    .note .post .comment-list .more-comment {
+        font-size:14px;
+        color:#969696;
         margin-bottom: 15px;
-        border-bottom: 1px dashed #f0f0f0;
+        padding-bottom: 15px;
+        border:none;
     }
-    .note .post .comment-list .sub-comment p{
-        font-size: 14px;
-        line-height: 1.5;
-        border-bottom: 5px;
+    .note .post .comment-list .more-comment a:hover {
+        color:#333!important;
     }
-    .note .post .comment-list .sub-comment p a{
-        color: #3194d0 !important;
+    .note .post .comment-list .more-comment i {
+        margin-right:5px;
     }
-    .note .post .comment-list .sub-tool-group{
-        font-size: 12px;
-        color:#969696;
-    }
-    .note .post .comment-list .sub-tool-group a{
-        margin-left: 10px;
-    }
-    .note .post .comment-list .sub-tool-group a i{
-        margin-right: 5px;
-    }
-    .note .post .comment-list .more-comment{
-        color:#969696;
-        font-size: 14px;
-    }
-    .note .post .comment-list .more-comment a i{
-        margin-right: 5px;
-    }
-    .note .post .comment-list .more-comment a:hover{
-        color: #333333 !important;
+    .note .post .comment-list .sub-comment-list .new-comment {
+        margin: 0;
     }
 </style>

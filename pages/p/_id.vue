@@ -187,7 +187,7 @@
                     this.$refs.guanzhuText.innerHTML = '已关注';
                 }
             },
-//          为了使两个关注按钮的移入移出事件互不影响，设置连个函数
+//          为了使两个关注按钮的移入移出事件互不影响，设置两个函数
             yiru2:function () {
                 let text = this.$refs.guanzhuText2.innerHTML;
                 if(text == '已关注'){

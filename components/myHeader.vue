@@ -12,8 +12,8 @@
                     写文章
                 </nuxt-link>
                 <!--登录和注册按钮-->
-                <nuxt-link to="sign-up" class="btn sign-up">注册</nuxt-link>
-                <nuxt-link to="sign-in" class="btn sign-in">登录</nuxt-link>
+                <nuxt-link to="/sign-up" class="btn sign-up">注册</nuxt-link>
+                <nuxt-link to="/sign-in" class="btn sign-in">登录</nuxt-link>
                 <!--如果用户登录了，那么显示用户头像-->
                 <div style="display:none;" class="user" @mouseover="userShow=true" @mouseleave="userShow=false">
                     <div class="drop-down">
@@ -85,7 +85,7 @@
                                         </nuxt-link>
                                     </li>
                                     <li>
-                                        <nuxt-link to="/">
+                                        <nuxt-link to="/notifications/chats">
                                             <i class="fa fa-envelope-o"></i>
                                             简信
                                         </nuxt-link>
@@ -97,7 +97,7 @@
                                         </nuxt-link>
                                     </li>
                                     <li>
-                                        <nuxt-link to="/">
+                                        <nuxt-link to="/notifications/likes">
                                             <i class="fa fa-heart-o"></i>
                                             喜欢和赞
                                         </nuxt-link>

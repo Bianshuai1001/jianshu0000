@@ -2,7 +2,7 @@
   "name": "jianshu",
   "version": "1.0.0",
   "description": "jianshu product",
-  "author": "lizhiyuan <148334733@qq.com>",
+  "author": "bianshuai <1548620765@qq.com>",
   "private": true,
   "scripts": {
     "dev": "backpack dev",
