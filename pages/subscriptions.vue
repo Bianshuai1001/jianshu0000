@@ -3,11 +3,11 @@
         <my-header></my-header>
         <div class="my-container subscriptions">
             <div class="row">
-                <div class="aside">
+                <div class="aside col-4">
                     <subscriptionLeft></subscriptionLeft>
                 </div>
-                <div class="col-8">
-
+                <div class="main col-8">
+                    <noteList></noteList>
                 </div>
             </div>
         </div>
@@ -16,10 +16,12 @@
 <script>
     import myHeader from '~/components/myHeader'
     import subscriptionLeft from '~/components/subscriptionLeft'
+    import noteList from '~/components/notelist'
     export default{
         components:{
             myHeader,
             subscriptionLeft,
+            noteList
         },
     }
 </script>
