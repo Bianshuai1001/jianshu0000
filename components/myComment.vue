@@ -94,40 +94,43 @@
                                         {{comment.likes_count}}人点赞
                                     </span>
                                 </a>
-                                <a href="javascript:void(0)">
+                                <a href="javascript:void(0)" @click="showSubCommentForm(index,'top')">
                                     <i class="fa fa-comment-o"></i>
                                     <span>回复</span>
                                 </a>
                             </div>
                         </div>
                     </div>
-                    <div v-if="comment.children.length != 0" class="sub-comment-list">
-                        <div v-for="(subComment,index) in comment.children" :id="'comment-' + subComment.id" class="sub-comment">
-                            <p>
-                                <nuxt-link to="/u/123">
-                                    {{subComment.user.nick_name}}
-                                </nuxt-link>
-                                :
-                                <span v-html="subComment.compiled_content"></span>
-                            </p>
-                            <div class="sub-tool-group">
-                                <span>{{subComment.create_at| time}}</span>
-                                <a href="javascript:void(0)">
-                                    <i class="fa fa-comment-o"></i>
-                                    <span>回复</span>
+                    <div  class="sub-comment-list">
+                        <div v-if="comment.children.length != 0">
+                            <div v-for="(subComment,nindex) in comment.children" :id="'comment-' + subComment.id" class="sub-comment">
+                                <p>
+                                    <nuxt-link to="/u/123">
+                                        {{subComment.user.nick_name}}
+                                    </nuxt-link>
+                                    :
+                                    <span v-html="subComment.compiled_content"></span>
+                                </p>
+                                <div class="sub-tool-group">
+                                    <span>{{subComment.create_at| time}}</span>
+                                    <a href="javascript:void(0)" @click="showSubCommentAtName(index,subComment.id,subComment.user.nick_name)">
+                                        <i class="fa fa-comment-o"></i>
+                                        <span>回复</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <!--666666666666666666666666666666666666666666-->
+                            <div class="sub-comment more-comment">
+                                <a class="add-comment-btn" @click="showSubCommentForm(index,'bottom')" href="javascript:void(0)">
+                                    <i class="fa fa-pencil"></i>
+                                    <span>添加新评论</span>
                                 </a>
                             </div>
-                        </div>
-                        <div class="sub-comment more-comment">
-                            <a class="add-comment-btn" @click="showSubCommentForm(index)" href="javascript:void(0)">
-                                <i class="fa fa-pencil"></i>
-                                <span>添加新评论</span>
-                            </a>
                         </div>
                         <!--要显示的表单-->
                         <transition :duration="200" name="fade">
                             <form v-if="activeIndex.includes(index)" class="new-comment">
-                                <textarea v-focus placeholder="写下你的评论" v-model="SubCommentList[index]"></textarea>
+                                <textarea v-focus placeholder="写下你的评论" v-model="SubCommentList[index]" ref="content" class="subCommentTextArea"></textarea>
                                 <div class="write-function-block clearfix">
                                     <div class="emoji-modal-wrap">
                                         <a href="javascript:void(0)" class="emoji" @click="showSubEmoji(index)">
@@ -158,6 +161,7 @@
     </div>
 </template>
 <script>
+    import Vue from 'vue'
     import vueEmoji from '~/components/vueEmoji'
     export default {
         name:'myComment',
@@ -165,7 +169,10 @@
             return {
                 sendCommentBtn:false,
                 showEmoji:false,
+                oldIndex:null,
+//              暂存选中的表情和输入的话，绑定在 textarea 上
                 commentData:'',
+//              评论的假数据
                 comments:[
                     {
                         id:19935725,
@@ -292,62 +299,200 @@
                         user_id:3160769
                     }
                 ],
+//              需要显示表单（评论框）的数组
                 activeIndex:[],
+//              需要显示的表情数组
                 emojiIndex:[],
+//              评论内容的列表
                 SubCommentList:[],
+                prevId:-1,//初始情况下该id是不存在的
+                prevIndex:-1,
+                commentFormState:[],
+                commentId:null,
+//              因为数据都是循环渲染，为了避免牵一发而动全身的现象，唯一的途径就是以索引为基础进行区分
+//              本项目的巧妙之处在于，对需要显示的元素添加到一个空数组中，
+//              后续事件通过索引添加删除元素，来控制元素的显示和隐藏
             }
         },
         methods:{
+//          该函数用于选择表情
             selectEmoji:function(code){
+//                一旦选中表情框就消失
                 this.showEmoji = false;
+//                将选中的表情暂存在commentData中
                 this.commentData += code;
             },
+//            用于发送一级回复的内容
             sendComment:function(){
                 console.log('发送');
             },
-            showSubCommentForm:function(value){
-                if(this.activeIndex.includes(value)){
-                    let index = this.activeIndex.indexOf(value);
-                    this.SubCommentList[value]='';
-                    this.activeIndex.splice(index,1);
+//          该函数用于：当点击二级回复时当前下标显示评论对话框
+//           作废
+            zuofeishowSubCommentForm:function(index,id,name){
+//                console.log(index);
+//                console.log(id);
+//                console.log(name);
+//                判断一下 如果上一次点击跟当前点击一样，就需要将其关闭
+                if(this.prevIndex == index && this.prevId == id){
+                    //记录值还原成初始值
+                    this.prevIndex = -1;
+                    this.prevId = -1;
+                    console.log('隐藏');
                 }else{
-                    this.activeIndex.push(value);
-//                    清除表单中的内容
-                    this.SubCommentList[value]='';
-//                    将表情也关掉
-                    this.emojiIndex = [];
-
+                    //只考虑显示的情况下   事先考虑点击下标对应的表单的显示
+                    if(!this.activeIndex.includes(index)){
+                        this.activeIndex.push(index);
+                    }
                 }
 
+
+//                要在结束时 记录下当前点到的ID值
+                this.prevId = id;
+//                记录
+                this.prevIndex = index;
+
+
+
+
+
+
+
+
+
+//                if(id == this.oldId[0]){
+////                    第二次点击
+//                    let num = this.activeIndex.indexOf(index);
+//                    this.SubCommentList[index]='';
+//                    this.activeIndex.splice(num,1);
+//                    console.log('第二次点击');
+////                    this.oldId=[];
+//                }else{
+////                    第一次点击
+//                    this.activeIndex.push(index);
+//                    this.SubCommentList[index]='';
+//                    this.emojiIndex = [];
+//                    this.oldId=[];
+//                    this.oldId.push(id)
+//                    console.log('第一次点击');
+//                }
+////                该函数中的value值是指传递过来的下标
+////                判断条件为：activeIndex数组中是否包含当前的下标
+//                if(this.activeIndex.includes(value)){
+////                  获取索引值
+//                    let index = this.activeIndex.indexOf(value);
+////                  清空需要显示的评论框的内容
+//                    this.SubCommentList[value]='';
+////                    将该索引值的元素删除（不显示）
+//                    this.activeIndex.splice(index,1);
+//                }else{
+////                    如果不包含在activeIndex数组中，就将对应下标的评论框放入activeIndex数组中（用于显示）
+//                    this.activeIndex.push(value);
+////                    清除表单中的内容
+//                    this.SubCommentList[value]='';
+////                    将表情也关掉
+//                    this.emojiIndex = [];
+//                    console.log(this.avtiveIndex);
+//                    console.log(this.$refs.content);
+//                }
+
             },
+//          大回复和添加新评论绑定的方法
+            showSubCommentForm:function(index,position){
+                Vue.set(this.SubCommentList,index,'');
+                this.commentId=null;
+                if(!this.activeIndex.includes(index)){
+//                    每次打开清空内容
+                    this.SubCommentList[index] ='';
+                    //第一次点击，总是显示
+                    this.activeIndex.push(index);
+                    //记录当前点击的下标以及位置
+                    this.commentFormState[index] = position;
+                }else if(this.activeIndex.includes(index)){
+                    if(this.commentFormState[index] !== position){
+                        //点的是另外一个
+                        this.commentFormState[index] = position;
+                        let num = this.activeIndex.indexOf(index);
+                        this.$refs.content[num].focus();
+                    }else{
+                        //点的是同一个,将它隐藏掉.
+                        this.activeIndex.splice(this.activeIndex.indexOf(index),1)
+                        this.commentFormState[index] = '';
+                    }
+                }
+            },
+//          该函数用于：二级回复下的小回复绑定的方法
+            showSubCommentAtName:function (index,id,name) {
+                this.commentFormState = [];
+               if(this.activeIndex.includes(index)){
+                   if(this.commentId == id){
+//                       隐藏掉
+                       this.activeIndex.splice(this.activeIndex.indexOf(index),1);
+                       this.commentId = null;
+                        Vue.set(this.SubCommentList,index,'');
+                   }else{
+                       //聚焦一下
+                       let num = this.activeIndex.indexOf(index);
+                       this.$refs.content[num].focus();
+//                     表单已经显示
+                       Vue.set(this.SubCommentList,index,'@'+ name+' ');
+                       this.commentId = id;//记录一下上次点击的id
+                   }
+
+               }else{
+//                   表单没有显示出来
+                   Vue.set(this.SubCommentList,index,'@'+ name+' ');
+                   this.activeIndex.push(index);
+               }
+            },
+//          该函数用于当前下标二级回复的发送
             sendSubCommentData:function(value){
                 let index = this.activeIndex.indexOf(value);
                 this.activeIndex.splice(index,1);
+//                value是下标
+                console.log(this.SubCommentList[value])
             },
+//           该函数用于当前下标二级回复评论框的关闭（取消按钮绑定）
             closeSubComment:function(value){
                 let index = this.activeIndex.indexOf(value);
                 this.activeIndex.splice(index,1);
                 this.SubCommentList[index]='';
             },
+//            用于当前下标的表情框显示与隐藏
             showSubEmoji:function(value){
+//          判断当前下标的表情框是否包含在emojiIndex数组中（该数组会显示），
+//          该数组仅能包含一个元素
                 if(this.emojiIndex.includes(value)){
+//                    如果emojiIndex数组中存在，就清空（隐藏）
                     this.emojiIndex = [];
                 }else{
+//                  如果不存在，先清空再将当前下标对应的元素放入其中，
+//                  事先清空是为了只能包含一个元素
                     this.emojiIndex = [];
                     this.emojiIndex.push(value);
                 }
             },
+//          该函数用于，当点击表情时，将选中的表情放入评论框
             selectSubEmoji:function(code){
-//                当前下标
+//           获取当前显示的表情框的索引
                 let index = this.emojiIndex[0];
-//              将表情所代表的code值放入表单当中
+//              此处index与点击顺序无关  是几还是几
+                console.log('index='+index);
+//              如果当前索引所对应的评论的值是 null 为了不显示在评论框中，将null变成'  '
                 if(this.SubCommentList[index] == null){
                   this.SubCommentList[index] =''
                 }
+//              内容上添加code
                 this.SubCommentList[index] += code;
-//              关掉emoji弹出框
+//              然后关掉emoji弹出框
                 this.emojiIndex = [];
-
+//               对显示的对话框添加自动聚焦事件
+                console.log(this.activeIndex)//索引不变 但会根据点击顺序  排列顺序会改变
+//               将activeIndex数组中索引为index的元素的索引赋值给num
+                let num = this.activeIndex.indexOf(index);
+                console.log(num)//0
+//                this.$refs.content也是个数组  先点击的索引为0  而后依次叠加
+                console.log(this.$refs.content)
+                this.$refs.content[num].focus();
             }
         },
         components:{
@@ -360,9 +505,10 @@
             "focus": {
                 // 钩子函数：bind inserted update componentUpdated unbind
                 // 钩子函数的参数：el，binding，vnode，oldVnode
-                bind:function(el,binding,vnode,oldVnode){
+                bind:function(el,{value}){
                     el.focus();
                 },
+
                 inserted: function (el) {
                     // 聚焦元素
                     el.focus()
@@ -391,6 +537,7 @@
         position:relative;
         margin-left:48px;
         margin-bottom:20px;
+        padding:5px 0;
     }
     .note .post .comment-list .avatar {
         width:38px;
@@ -533,7 +680,7 @@
         font-size:16px;
         margin:10px 0;
         line-height:1.5;
-        word-break: break-word!important;
+        word-break: break-all!important;
     }
     .note .post .comment-list .comment .tool-group a {
         color:#969696!important;
@@ -549,18 +696,19 @@
     .note .post .comment-list .sub-comment-list {
         border-left:2px solid #d9d9d9;
         margin-top:20px;
-        padding:5px 0 5px 20px;
+        padding:0px 0 0px 20px;
     }
     .note .post .comment-list .sub-comment {
+        display: block;
         padding-bottom:15px;
         margin-bottom:15px;
         border-bottom:1px dashed #f0f0f0;
     }
-    .note .post .comment-list .sub-comment-list .sub-comment:last-child {
-        margin: 0;
-        padding: 0;
-        border: none;
-    }
+    /*.note .post .comment-list .sub-comment-list .sub-comment:last-child {*/
+        /* margin:0;*/
+        /* padding:0;*/
+        /* border:none;*/
+    /*}*/
     .note .post .comment-list .sub-comment p {
         font-size:14px;
         line-height:1.5;
