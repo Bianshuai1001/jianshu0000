@@ -1,7 +1,7 @@
 <template>
     <div class="aside">
         <div class="title">个人介绍</div>
-        <a href="javascript:void(0)" class="function-btn"@click="showedit=!showedit">
+        <a href="javascript:void(0)" class="function-btn"@click="showedit=true">
             <i class="fa fa-pencil"></i>
             编辑
         </a>
@@ -9,7 +9,7 @@
             <form action=""  v-if="showedit">
                 <textarea></textarea>
                 <input type="button" value="保存" class="btn btn-hollow">
-                <a href="javacsript:void(0)">取消</a>
+                <a href="javacsript:void(0)" @click="showedit=false">取消</a>
             </form>
         </transition>
         <div class="description">
@@ -36,7 +36,7 @@
                 <div class="title">我创建的专题</div>
                 <!--<div class="clearfix"></div>-->
                 <div class="new-collection-block">
-                    <nuxt-link to="/">
+                    <nuxt-link to="/collections/new">
                         <i class="fa fa-plus-square-o"></i>
                         <span>创建一个新专题</span>
                     </nuxt-link>
@@ -87,11 +87,11 @@
         font-size: 13px;
         color:#969696;
     }
-    .user .row .aside form{
+      .user .row .aside form{
         margin-bottom: 20px;
 
     }
-    .aside form textarea{
+      .aside form textarea{
         width:100%;
         height:125px;
         font-size: 14px;
@@ -105,7 +105,7 @@
         resize: none;
         font-size:13px;
     }
-     .aside form input{
+      .aside form input{
         padding:5px 20px;
         font-size: 14px;
         border: 1px solid #42c02e;
@@ -141,7 +141,7 @@
         line-height: 30px;
         vertical-align: middle;
     }
-     .aside .zhuanti .new-collection-block {
+      .aside .zhuanti .new-collection-block {
         position: relative;
         margin-bottom: 16px;
         padding: 0 0 16px;

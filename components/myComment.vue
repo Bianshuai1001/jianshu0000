@@ -6,7 +6,7 @@
                 <nuxt-link class="avatar" to="/u/213">
                     <img src="../assets/img/tag-1.jpg">
                 </nuxt-link>
-                <textarea @focus="sendCommentBtn=true" placeholder="写下你的评论" v-model="commentData"></textarea>
+                <textarea v-focus="emojiFocus" @focus="sendCommentBtn=true" placeholder="写下你的评论" v-model="commentData"></textarea>
                 <transition :duration="200" name="fade">
                     <div v-if="sendCommentBtn" class="write-function-block clearfix">
                         <div class="emoji-modal-wrap">
@@ -23,7 +23,7 @@
                             Ctrl+Enter 发表
                         </div>
                         <a class="btn btn-send" href="javascript:void(0)" @click="sendComment">发送</a>
-                        <a class="cancel" href="javascript:void(0)" @click="sendCommentBtn=false">取消</a>
+                        <a class="cancel" href="javascript:void(0)" @click="sendCommentBtn=false;commentData=null">取消</a>
                     </div>
                 </transition>
             </form>
@@ -88,13 +88,13 @@
                                 {{comment.compiled_content}}
                             </p>
                             <div class="tool-group">
-                                <a href="javascript:void(0)">
-                                    <i class="fa fa-thumbs-o-up"></i>
-                                    <span>
+                                <a href="javascript:void(0)"@click="CommentLike(index)" class="like-bottom zan-animation">
+                                    <i class="fa":class="comment.liked?'fa-thumbs-up':'fa-thumbs-o-up' "></i>
+                                    <span :class="comment.liked ? 'realy_liked':'no_liked'">
                                         {{comment.likes_count}}人点赞
                                     </span>
                                 </a>
-                                <a href="javascript:void(0)" @click="showSubCommentForm(index,'top')">
+                                <a href="javascript:void(0)" @click="showSubCommentForm(index,'top','')">
                                     <i class="fa fa-comment-o"></i>
                                     <span>回复</span>
                                 </a>
@@ -113,7 +113,7 @@
                                 </p>
                                 <div class="sub-tool-group">
                                     <span>{{subComment.create_at| time}}</span>
-                                    <a href="javascript:void(0)" @click="showSubCommentAtName(index,subComment.id,subComment.user.nick_name)">
+                                    <a href="javascript:void(0)" @click="showSubCommentForm(index,subComment.id,subComment.user.nick_name)">
                                         <i class="fa fa-comment-o"></i>
                                         <span>回复</span>
                                     </a>
@@ -121,7 +121,7 @@
                             </div>
                             <!--666666666666666666666666666666666666666666-->
                             <div class="sub-comment more-comment">
-                                <a class="add-comment-btn" @click="showSubCommentForm(index,'bottom')" href="javascript:void(0)">
+                                <a class="add-comment-btn" @click="showSubCommentForm(index,'bottom','')" href="javascript:void(0)">
                                     <i class="fa fa-pencil"></i>
                                     <span>添加新评论</span>
                                 </a>
@@ -130,7 +130,8 @@
                         <!--要显示的表单-->
                         <transition :duration="200" name="fade">
                             <form v-if="activeIndex.includes(index)" class="new-comment">
-                                <textarea v-focus placeholder="写下你的评论" v-model="SubCommentList[index]" ref="content" class="subCommentTextArea"></textarea>
+                                <textarea v-focus="commentFormState[index]" @blur="commentFormState[index]=false" placeholder="写下你的评论" v-model="SubCommentList[index]" ref="content" class="subCommentTextArea"
+                                ></textarea>
                                 <div class="write-function-block clearfix">
                                     <div class="emoji-modal-wrap">
                                         <a href="javascript:void(0)" class="emoji" @click="showSubEmoji(index)">
@@ -308,7 +309,8 @@
                 prevId:-1,//初始情况下该id是不存在的
                 prevIndex:-1,
                 commentFormState:[],
-                commentId:null,
+                commentId:[],
+                emojiFocus:false
 //              因为数据都是循环渲染，为了避免牵一发而动全身的现象，唯一的途径就是以索引为基础进行区分
 //              本项目的巧妙之处在于，对需要显示的元素添加到一个空数组中，
 //              后续事件通过索引添加删除元素，来控制元素的显示和隐藏
@@ -317,6 +319,7 @@
         methods:{
 //          该函数用于选择表情
             selectEmoji:function(code){
+                this.emojiFocus = true;
 //                一旦选中表情框就消失
                 this.showEmoji = false;
 //                将选中的表情暂存在commentData中
@@ -328,7 +331,7 @@
             },
 //          该函数用于：当点击二级回复时当前下标显示评论对话框
 //           作废
-            zuofeishowSubCommentForm:function(index,id,name){
+            zuofei1showSubCommentForm:function(index,id,name){
 //                console.log(index);
 //                console.log(id);
 //                console.log(name);
@@ -397,7 +400,9 @@
 
             },
 //          大回复和添加新评论绑定的方法
-            showSubCommentForm:function(index,position){
+            //           作废
+            zuofei2showSubCommentForm:function(index,position){
+//                新加
                 Vue.set(this.SubCommentList,index,'');
                 this.commentId=null;
                 if(!this.activeIndex.includes(index)){
@@ -421,7 +426,9 @@
                 }
             },
 //          该函数用于：二级回复下的小回复绑定的方法
-            showSubCommentAtName:function (index,id,name) {
+            //           作废
+            zuofei3showSubCommentAtName:function (index,id,name) {
+//                新加
                 this.commentFormState = [];
                if(this.activeIndex.includes(index)){
                    if(this.commentId == id){
@@ -444,18 +451,46 @@
                    this.activeIndex.push(index);
                }
             },
+            showSubCommentForm:function(index,id,name){
+                console.log(index);
+                let ID = id.toString();
+                if(this.commentId[index] == ID){
+                    //点两次
+                    this.activeIndex.splice(this.activeIndex.indexOf(index),1);
+                    this.commentId[index] = '';
+                }else{
+                    //点一次
+                    //清除表单内容
+                    this.SubCommentList[index] = '';
+
+                    //表情关掉
+                    this.emojiIndex = [];
+                    if(!this.activeIndex.includes(index)){
+                        this.activeIndex.push(index);
+                    }
+                    // 判断用户名是否存在，如果存在添加
+                    if(name != ''){
+                        this.SubCommentList[index] = `@${name} `;
+                    }
+                    //存一下上一个回复列表对应点击的按钮
+                    this.commentId[index] = ID;
+                    this.commentFormState[index] = true;
+                }
+            },
 //          该函数用于当前下标二级回复的发送
             sendSubCommentData:function(value){
                 let index = this.activeIndex.indexOf(value);
                 this.activeIndex.splice(index,1);
 //                value是下标
-                console.log(this.SubCommentList[value])
+                console.log(this.SubCommentList[value]);
+                this.commentId[value] = '';
             },
 //           该函数用于当前下标二级回复评论框的关闭（取消按钮绑定）
             closeSubComment:function(value){
                 let index = this.activeIndex.indexOf(value);
                 this.activeIndex.splice(index,1);
                 this.SubCommentList[index]='';
+                this.commentId[value] = '';
             },
 //            用于当前下标的表情框显示与隐藏
             showSubEmoji:function(value){
@@ -493,6 +528,15 @@
 //                this.$refs.content也是个数组  先点击的索引为0  而后依次叠加
                 console.log(this.$refs.content)
                 this.$refs.content[num].focus();
+            },
+            CommentLike:function (index) {
+                if(this.comments[index].liked){
+                    this.comments[index].liked = false;
+                    this.comments[index].likes_count-=1
+                }else{
+                    this.comments[index].liked = true;
+                    this.comments[index].likes_count+=1
+                }
             }
         },
         components:{
@@ -506,12 +550,21 @@
                 // 钩子函数：bind inserted update componentUpdated unbind
                 // 钩子函数的参数：el，binding，vnode，oldVnode
                 bind:function(el,{value}){
-                    el.focus();
+                    if(value){
+                        el.focus();
+                    }
                 },
 
-                inserted: function (el) {
+                inserted: function (el,{value}) {
                     // 聚焦元素
-                    el.focus()
+                   if(value){
+                       el.focus()
+                   }
+                },
+                update:function (el,{value}) {
+                    if(value){
+                        el.focus()
+                    }
                 }
             }
         },
@@ -686,6 +739,18 @@
         color:#969696!important;
         margin-right:10px;
     }
+    .note .post .comment-list .comment .tool-group a .no_liked:hover{
+        color:#333!important;
+    }
+    .note .post .comment-list .comment .tool-group a .realy_liked{
+        color: #333333 !important;
+    }
+    .note .post .comment-list .comment .tool-group a i.fa-thumbs-o-up:hover {
+        color: #ea6f5a !important;
+    }
+    .note .post .comment-list .comment .tool-group a i.fa-thumbs-up{
+        color: #ea6f5a !important;
+    }
     .note .post .comment-list .comment .tool-group a i {
         font-size:18px;
         margin-right:5px;
@@ -705,10 +770,7 @@
         border-bottom:1px dashed #f0f0f0;
     }
     /*.note .post .comment-list .sub-comment-list .sub-comment:last-child {*/
-        /* margin:0;*/
-        /* padding:0;*/
-        /* border:none;*/
-    /*}*/
+
     .note .post .comment-list .sub-comment p {
         font-size:14px;
         line-height:1.5;
