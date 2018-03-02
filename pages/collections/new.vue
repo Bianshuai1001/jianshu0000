@@ -49,10 +49,10 @@
                             <td class="setting-title">投稿是否需要审核</td>
                             <td>
                                 <div class="col-6 radio">
-                                    <input type="radio" name="xuyao" checked><span>需要</span>
+                                    <input type="radio" name="xuyao" checked :disabled="noallow"><span>需要</span>
                                 </div>
                                 <div class="radio">
-                                    <input type="radio" name="xuyao"><span>不需要</span>
+                                    <input type="radio" name="xuyao" :disabled="noallow"><span>不需要</span>
                                 </div>
                             </td>
                         </tr>

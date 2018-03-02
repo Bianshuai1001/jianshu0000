@@ -17,13 +17,13 @@
         </div>
         <ul class="list user-dynamic">
             <li>
-                <nuxt-link to="/">
+                <nuxt-link to="/users/123/subscriptions">
                     <i class="fa fa-th-large"></i>
                     <span>我关注的专题/文集/连载</span>
                 </nuxt-link>
             </li>
             <li>
-                <nuxt-link to="/">
+                <nuxt-link to="/users/123/liked_notes">
                     <i class=" fa fa-heart-o"></i>
                     <span>我喜欢的文章</span>
                 </nuxt-link>
@@ -34,7 +34,6 @@
         <div class="zhuanti">
             <div >
                 <div class="title">我创建的专题</div>
-                <!--<div class="clearfix"></div>-->
                 <div class="new-collection-block">
                     <nuxt-link to="/collections/new">
                         <i class="fa fa-plus-square-o"></i>
@@ -44,22 +43,23 @@
             </div>
             <div>
                 <div class="title">我的文集</div>
-                <!--<div class="clearfix"></div>-->
-                <div class="new-collection-block">
+                <nuxt-link to="/nb/123"class="new-collection-block">
                     <i class="fa fa-book"></i>
                     <span>随笔</span>
-                </div>
+                </nuxt-link>
             </div>
         </div>
     </div>
 </template>
 <script>
+//    import NuxtLink from "nuxt/lib/app/components/nuxt-link";
     export default{
+//        components: {NuxtLink},
         data(){
             return{
                 showedit:false,
             }
-        }
+        },
     }
 </script>
 <style>
@@ -122,9 +122,10 @@
     }
       .aside .user-dynamic{
         padding-bottom:6px;
+
     }
       .aside .list{
-        margin-bottom: 16px;
+        margin-bottom: 16px!important;
         border-bottom: 1px solid #f0f0f0;
     }
       .aside .list li a{
@@ -146,7 +147,7 @@
         margin-bottom: 16px;
         padding: 0 0 16px;
         text-align: left;
-        /*font-size: 0;*/
+        display: block;
         border-bottom: 1px solid #f0f0f0;
         clear: both;
         word-break: break-all!important;

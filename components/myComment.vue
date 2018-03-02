@@ -166,7 +166,7 @@
     import vueEmoji from '~/components/vueEmoji'
     export default {
         name:'myComment',
-        data () {
+        data (){
             return {
                 sendCommentBtn:false,
                 showEmoji:false,

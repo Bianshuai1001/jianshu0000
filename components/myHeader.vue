@@ -73,7 +73,7 @@
                         </li>
                         <li class="info-down hover"@mouseover="infoShow=true" @mouseleave="infoShow=false"
                             :class="{active:this.$route.path == '/notifications/comments'
-                            |this.$route.path == '/notifications/chats'
+                            |this.$route.path == '/notifications/chat'
                             |this.$route.path =='/notifications/requests'
                             |this.$route.path =='/notifications/likes'
                             |this.$route.path == '/notifications/follows'}">

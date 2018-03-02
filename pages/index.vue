@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="shouye">
         <my-header></my-header>
         <div class="index my-container">
             <div class="row">
@@ -16,39 +16,39 @@
                     </div>
                     <!--推荐专题-->
                     <div class="recommend-collection">
-                        <nuxt-link to="/collection/123">
+                        <nuxt-link to="/collections/123">
                             <img src="../assets/img/tag-1.jpg" alt="">
                             <span>文学</span>
                         </nuxt-link>
-                        <nuxt-link to="/collection/123">
+                        <nuxt-link to="/collections/123">
                             <img src="../assets/img/tag-2.jpg" alt="">
                             <span>摄影</span>
                         </nuxt-link>
-                        <nuxt-link to="/collection/123">
+                        <nuxt-link to="/collections/123">
                             <img src="../assets/img/tag-3.jpg" alt="">
                             <span>故事</span>
                         </nuxt-link>
-                        <nuxt-link to="/collection/123">
+                        <nuxt-link to="/collections/123">
                             <img src="../assets/img/tag-4.jpg" alt="">
                             <span>读书</span>
                         </nuxt-link>
-                        <nuxt-link to="/collection/123">
+                        <nuxt-link to="/collections/123">
                             <img src="../assets/img/tag-5.jpg" alt="">
                             <span>手绘</span>
                         </nuxt-link>
-                        <nuxt-link to="/collection/123">
+                        <nuxt-link to="/collections/123">
                             <img src="../assets/img/tag-6.jpg" alt="">
                             <span>旅行·在路上</span>
                         </nuxt-link>
-                        <nuxt-link to="/collection/123">
+                        <nuxt-link to="/collections/123">
                             <img src="../assets/img/tag-6.jpg" alt="">
                             <span>旅行·在路上</span>
                         </nuxt-link>
-                        <nuxt-link to="/collection/123">
+                        <nuxt-link to="/collections/123">
                             <img src="../assets/img/tag-6.jpg" alt="">
                             <span>旅行·在路上</span>
                         </nuxt-link>
-                        <nuxt-link to="/collection/123" class="more-hot-collection">
+                        <nuxt-link to="/collections/123" class="more-hot-collection">
                             更多热门专题
                             <i class="fa fa-angle-right"></i>
                         </nuxt-link>
